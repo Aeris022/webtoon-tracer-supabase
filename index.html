@@ -1,509 +1,241 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEBTOON Tracer - Suivi de lecture</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #e91e63 0%, #2196f3 100%);
-            min-height: 100vh;
-            color: white;
-        }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .header { text-align: center; margin-bottom: 40px; }
-        .header h1 { font-size: 3em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .auth-section { background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; margin-bottom: 30px; }
-        .webtoon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .webtoon-card { 
-            background: rgba(255,255,255,0.1); 
-            border-radius: 15px; 
-            padding: 20px; 
-            transition: transform 0.3s ease;
-        }
-        .webtoon-card:hover { transform: translateY(-5px); }
-        .btn { 
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-            border: none; 
-            padding: 12px 24px; 
-            border-radius: 25px; 
-            color: white; 
-            cursor: pointer; 
-            font-weight: bold;
-            margin: 5px;
-        }
-        .btn:hover { transform: scale(1.05); }
-        .input { 
-            width: 100%; 
-            padding: 12px; 
-            border: none; 
-            border-radius: 8px; 
-            margin: 10px 0;
-            background: rgba(255,255,255,0.9);
-            color: #333;
-        }
-        .hidden { display: none; }
-        .progress-bar { 
-            background: rgba(255,255,255,0.3); 
-            border-radius: 10px; 
-            overflow: hidden; 
-            margin: 10px 0;
-        }
-        .progress-fill { 
-            background: linear-gradient(45deg, #00d2ff, #3a7bd5); 
-            height: 8px; 
-            transition: width 0.3s ease;
-        }
-        .favorite-btn { 
-            background: none; 
-            border: none; 
-            font-size: 24px; 
-            cursor: pointer; 
-            color: #ffd700;
-        }
-        .stats { display: flex; justify-content: space-around; margin: 20px 0; }
-        .stat-item { text-align: center; }
-        .stat-number { font-size: 2em; font-weight: bold; color: #00d2ff; }
-        .chapter-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(30px, 1fr)); 
-            gap: 5px; 
-            margin: 15px 0;
-        }
-        .chapter-btn { 
-            width: 30px; 
-            height: 30px; 
-            border: 1px solid rgba(255,255,255,0.3); 
-            background: rgba(255,255,255,0.1); 
-            color: white; 
-            cursor: pointer; 
-            border-radius: 5px;
-            font-size: 10px;
-        }
-        .chapter-btn.read { 
-            background: #00d084; 
-            border-color: #00d084; 
-        }
-        .notes-textarea { 
-            width: 100%; 
-            padding: 10px; 
-            border: none; 
-            border-radius: 8px; 
-            resize: vertical;
-            min-height: 60px;
-            background: rgba(255,255,255,0.9);
-            color: #333;
-            margin-top: 10px;
-        }
-        .admin-badge { 
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4); 
-            padding: 4px 8px; 
-            border-radius: 12px; 
-            font-size: 12px; 
-            font-weight: bold;
-            margin-left: 10px;
-        }
-    </style>
+    <title>WEBTOON Tracer - Connectez-vous à votre compte</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🌟 WEBTOON Tracer</h1>
-            <p>Suivez vos lectures de webtoons - Version Supabase</p>
-            <p style="font-size: 14px; opacity: 0.8; margin-top: 10px;">
-                💰 0€/mois • 📊 Base Supabase • 🚀 GitHub Pages
-            </p>
-        </div>
-
-        <!-- Section Connexion -->
-        <div id="auth-section" class="auth-section">
-            <div id="login-form">
-                <h3>🔐 Connexion</h3>
-                <input type="email" id="email" class="input" placeholder="Email" value="erisaudrey@gmail.com">
-                <input type="password" id="password" class="input" placeholder="Mot de passe" value="password123">
-                <div style="margin: 15px 0;">
-                    <label style="display: flex; align-items: center; cursor: pointer;">
-                        <input type="checkbox" id="remember-me" style="margin-right: 8px;">
-                        Se souvenir de moi
-                    </label>
+    <!-- Page de connexion -->
+    <div id="loginPage" class="login-page">
+        <div class="min-h-screen gradient-bg flex items-center justify-center p-4">
+            <div class="absolute inset-0 overflow-hidden">
+                <div class="blob-decoration absolute top-10 right-10 w-20 h-20 opacity-20"></div>
+                <div class="blob-decoration absolute bottom-20 left-10 w-16 h-16 opacity-15"></div>
+                <div class="blob-decoration absolute top-1/2 left-1/4 w-12 h-12 opacity-10"></div>
+            </div>
+            
+            <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md relative z-10">
+                <div class="text-center mb-8">
+                    <div class="blob-decoration w-24 h-20 mx-auto mb-4 flex items-center justify-center">
+                        <svg class="text-white text-2xl" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+                        </svg>
+                    </div>
+                    <h1 class="text-3xl font-bold gradient-text mb-2">WEBTOON Tracer</h1>
+                    <p class="text-gray-600">Connectez-vous à votre compte</p>
                 </div>
-                <button onclick="login()" class="btn">Se connecter</button>
-                <button onclick="showSignup()" class="btn">S'inscrire</button>
-            </div>
-            
-            <div id="signup-form" class="hidden">
-                <h3>📝 Inscription</h3>
-                <input type="text" id="signup-username" class="input" placeholder="Nom d'utilisateur">
-                <input type="email" id="signup-email" class="input" placeholder="Email">
-                <input type="password" id="signup-password" class="input" placeholder="Mot de passe">
-                <button onclick="signup()" class="btn">S'inscrire</button>
-                <button onclick="showLogin()" class="btn">Retour</button>
-            </div>
-            
-            <div id="user-info" class="hidden">
-                <h3>👋 Bienvenue, <span id="username"></span>! <span id="admin-badge" class="admin-badge hidden">Admin</span></h3>
-                <p>📊 Base Supabase connectée • 💰 Économie: 360€/an vs Replit</p>
-                <button onclick="logout()" class="btn">Déconnexion</button>
-                <button id="admin-btn" onclick="showAdmin()" class="btn hidden">Administration</button>
-            </div>
-        </div>
 
-        <!-- Statistiques -->
-        <div id="stats-section" class="stats hidden">
-            <div class="stat-item">
-                <div class="stat-number" id="total-webtoons">3</div>
-                <div>Webtoons</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number" id="favorites-count">0</div>
-                <div>Favoris</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number" id="reading-progress">0%</div>
-                <div>Lu</div>
-            </div>
-        </div>
+                <form id="loginForm" class="space-y-4">
+                    <div class="form-item">
+                        <input
+                            type="email"
+                            id="email"
+                            value="erisaudrey@gmail.com"
+                            placeholder="Adresse email"
+                            class="w-full px-4 py-3 bg-gray-100 rounded-xl border-0 focus:ring-2 focus:ring-primary focus:bg-white transition-all"
+                            required
+                        />
+                    </div>
+                    
+                    <div class="form-item">
+                        <input
+                            type="password"
+                            id="password"
+                            value="password123"
+                            placeholder="Mot de passe"
+                            class="w-full px-4 py-3 bg-gray-100 rounded-xl border-0 focus:ring-2 focus:ring-primary focus:bg-white transition-all"
+                            required
+                        />
+                    </div>
+                    
+                    <div class="flex items-center justify-between text-sm">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="rememberMe" class="rounded text-primary focus:ring-primary" />
+                            <span class="ml-2 text-gray-600">Se souvenir de moi</span>
+                        </label>
+                        <a href="#" class="text-primary hover:text-secondary transition-colors">
+                            Mot de passe oublié?
+                        </a>
+                    </div>
 
-        <!-- Navigation -->
-        <div id="nav-section" class="hidden" style="text-align: center; margin: 20px 0;">
-            <button id="nav-home" onclick="showHome()" class="btn">🏠 Accueil</button>
-            <button id="nav-favorites" onclick="showFavorites()" class="btn">⭐ Mes Favoris</button>
-            <button id="nav-profile" onclick="showProfile()" class="btn">👤 Mon Profil</button>
-        </div>
+                    <button
+                        type="submit"
+                        class="w-full gradient-bg text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all transform hover:scale-105"
+                    >
+                        Se connecter
+                    </button>
+                </form>
 
-        <!-- Section Recherche -->
-        <div id="search-section" class="hidden" style="margin-bottom: 20px;">
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <input type="text" id="search-input" class="input" placeholder="🔍 Rechercher un webtoon..." 
-                    onkeyup="searchWebtoons()" style="flex: 1; margin: 0;">
-                <button onclick="clearSearch()" class="btn">Effacer</button>
-            </div>
-            <div id="search-results" style="margin-top: 10px; font-size: 14px; opacity: 0.8;"></div>
-        </div>
-
-        <!-- Liste des webtoons -->
-        <div id="webtoons-section" class="hidden">
-            <h2 id="webtoons-title">📚 Collection de Webtoons</h2>
-            <div id="webtoons-grid" class="webtoon-grid"></div>
-        </div>
-
-        <!-- Section Admin -->
-        <div id="admin-section" class="hidden">
-            <div class="auth-section">
-                <h2>⚙️ Administration</h2>
-                <button onclick="showHome()" class="btn">Retour à l'accueil</button>
-                <div style="margin-top: 20px;">
-                    <h3>📊 Statistiques Système</h3>
-                    <p>Total utilisateurs: 1</p>
-                    <p>Total webtoons: 3</p>
-                    <p>Base Supabase: Connectée</p>
-                    <p>Coût hébergement: 0€/mois</p>
+                <div class="text-center mt-6">
+                    <p class="text-gray-600">
+                        Pas encore de compte?
+                        <a href="#" class="text-primary hover:text-secondary font-semibold transition-colors">
+                            Créer un compte
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // Configuration Supabase - REMPLACER PAR VOS CLÉS
-        const SUPABASE_URL = 'https://etwedbfrqwrceinpkqvg.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV0d2VkYmZycXdyY2VpbnBrcXZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4NjY3NDIsImV4cCI6MjA3MDQ0Mjc0Mn0.4FcfSQ0_rAPsdUUG45DvzqhaWDMk9Epzy8xBFUdk5s4'; // À remplacer par votre clé
-
-        let currentUser = null;
-        let userProgress = {};
-        let userFavorites = new Set();
-        let userNotes = {};
-        let currentView = 'home';
-        let filteredWebtoons = [];
-
-        // Webtoons de démonstration
-        const webtoons = [
-            {
-                id: 1,
-                title: "Tower of God",
-                platform: "Webtoon",
-                chapters: 300,
-                description: "L'ascension mystérieuse de Bam dans la Tour"
-            },
-            {
-                id: 2, 
-                title: "Solo Leveling",
-                platform: "Webtoon",
-                chapters: 179,
-                description: "Sung Jin-Woo, du plus faible au plus fort"
-            },
-            {
-                id: 3,
-                title: "UnOrdinary",
-                platform: "Webtoon", 
-                chapters: 250,
-                description: "John dans un monde de super-pouvoirs"
-            }
-        ];
-
-        function login() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const rememberMe = document.getElementById('remember-me').checked;
-            
-            if (email === 'erisaudrey@gmail.com' && password === 'password123') {
-                currentUser = { 
-                    id: 1, 
-                    email: email, 
-                    username: 'erisaudrey', 
-                    isAdmin: true 
-                };
-                
-                if (rememberMe) {
-                    localStorage.setItem('savedEmail', email);
-                    localStorage.setItem('savedPassword', password);
-                    localStorage.setItem('rememberMe', 'true');
-                }
-                
-                showUserInterface();
-                loadData();
-                showHome();
-            } else {
-                alert('Email ou mot de passe incorrect');
-            }
-        }
-
-        function signup() {
-            const username = document.getElementById('signup-username').value;
-            const email = document.getElementById('signup-email').value;
-            alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
-            showLogin();
-        }
-
-        function logout() {
-            if (document.getElementById('remember-me').checked) {
-                // Garder les infos si "se souvenir" est coché
-            } else {
-                localStorage.removeItem('savedEmail');
-                localStorage.removeItem('savedPassword');
-                localStorage.removeItem('rememberMe');
-            }
-            
-            currentUser = null;
-            userProgress = {};
-            userFavorites.clear();
-            userNotes = {};
-            showAuthInterface();
-        }
-
-        function showLogin() {
-            document.getElementById('login-form').classList.remove('hidden');
-            document.getElementById('signup-form').classList.add('hidden');
-        }
-
-        function showSignup() {
-            document.getElementById('login-form').classList.add('hidden');
-            document.getElementById('signup-form').classList.remove('hidden');
-        }
-
-        function showAuthInterface() {
-            document.getElementById('auth-section').classList.remove('hidden');
-            document.getElementById('stats-section').classList.add('hidden');
-            document.getElementById('nav-section').classList.add('hidden');
-            document.getElementById('search-section').classList.add('hidden');
-            document.getElementById('webtoons-section').classList.add('hidden');
-            document.getElementById('admin-section').classList.add('hidden');
-            document.getElementById('user-info').classList.add('hidden');
-        }
-
-        function showUserInterface() {
-            document.getElementById('auth-section').classList.add('hidden');
-            document.getElementById('stats-section').classList.remove('hidden');
-            document.getElementById('nav-section').classList.remove('hidden');
-            document.getElementById('search-section').classList.remove('hidden');
-            document.getElementById('user-info').classList.remove('hidden');
-            document.getElementById('username').textContent = currentUser.username;
-            
-            if (currentUser.isAdmin) {
-                document.getElementById('admin-badge').classList.remove('hidden');
-                document.getElementById('admin-btn').classList.remove('hidden');
-            }
-        }
-
-        function showHome() {
-            currentView = 'home';
-            document.getElementById('webtoons-section').classList.remove('hidden');
-            document.getElementById('admin-section').classList.add('hidden');
-            document.getElementById('webtoons-title').textContent = '📚 Collection de Webtoons';
-            filteredWebtoons = [...webtoons];
-            displayWebtoons();
-        }
-
-        function showFavorites() {
-            currentView = 'favorites';
-            document.getElementById('webtoons-section').classList.remove('hidden');
-            document.getElementById('admin-section').classList.add('hidden');
-            document.getElementById('webtoons-title').textContent = '⭐ Mes Favoris';
-            filteredWebtoons = webtoons.filter(w => userFavorites.has(w.id));
-            displayWebtoons();
-        }
-
-        function showProfile() {
-            alert('Profil utilisateur - Fonctionnalité à venir dans la prochaine version !');
-        }
-
-        function showAdmin() {
-            if (!currentUser.isAdmin) return;
-            document.getElementById('webtoons-section').classList.add('hidden');
-            document.getElementById('admin-section').classList.remove('hidden');
-        }
-
-        function loadData() {
-            const savedProgress = localStorage.getItem(`progress_${currentUser.id}`);
-            if (savedProgress) userProgress = JSON.parse(savedProgress);
-            
-            const savedFavorites = localStorage.getItem(`favorites_${currentUser.id}`);
-            if (savedFavorites) userFavorites = new Set(JSON.parse(savedFavorites));
-            
-            const savedNotes = localStorage.getItem(`notes_${currentUser.id}`);
-            if (savedNotes) userNotes = JSON.parse(savedNotes);
-        }
-
-        function displayWebtoons() {
-            const grid = document.getElementById('webtoons-grid');
-            grid.innerHTML = '';
-
-            if (filteredWebtoons.length === 0 && currentView === 'favorites') {
-                grid.innerHTML = '<p style="text-align: center; opacity: 0.7;">Aucun favori pour le moment. Cliquez sur ⭐ pour ajouter des webtoons !</p>';
-                updateStats();
-                return;
-            }
-
-            filteredWebtoons.forEach(webtoon => {
-                const isFavorite = userFavorites.has(webtoon.id);
-                const progress = userProgress[webtoon.id] || {};
-                const readChapters = Object.keys(progress).length;
-                const progressPercent = Math.round((readChapters / webtoon.chapters) * 100);
-                const notes = userNotes[webtoon.id] || '';
-
-                const card = document.createElement('div');
-                card.className = 'webtoon-card';
-                card.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h3>${webtoon.title}</h3>
-                        <button class="favorite-btn" onclick="toggleFavorite(${webtoon.id})">
-                            ${isFavorite ? '⭐' : '☆'}
+    <!-- Dashboard principal -->
+    <div id="dashboard" class="dashboard-container hidden">
+        <div class="min-h-screen bg-gray-50">
+            <!-- Header -->
+            <header class="gradient-bg text-white p-6">
+                <div class="max-w-7xl mx-auto flex justify-between items-center">
+                    <div class="flex items-center space-x-4">
+                        <div class="blob-decoration w-12 h-10 flex items-center justify-center">
+                            <svg class="text-white" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+                            </svg>
+                        </div>
+                        <h1 class="text-2xl font-bold">WEBTOON Tracer</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span id="userInfo" class="text-sm opacity-90"></span>
+                        <button id="logoutBtn" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors">
+                            Déconnexion
                         </button>
                     </div>
-                    <p style="margin-bottom: 10px; opacity: 0.9;">${webtoon.description}</p>
-                    <p><strong>📱 Plateforme:</strong> ${webtoon.platform}</p>
-                    <p><strong>📖 Chapitres:</strong> ${webtoon.chapters}</p>
-                    <p><strong>📊 Progression:</strong> ${readChapters}/${webtoon.chapters} (${progressPercent}%)</p>
-                    
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                </div>
+            </header>
+
+            <!-- Navigation -->
+            <nav class="bg-white border-b border-gray-200">
+                <div class="max-w-7xl mx-auto">
+                    <div class="flex space-x-0">
+                        <button class="nav-tab active" data-tab="home">
+                            <span class="mr-2">🏠</span> Accueil
+                        </button>
+                        <button class="nav-tab" data-tab="favorites">
+                            <span class="mr-2">⭐</span> Mes Favoris
+                        </button>
+                        <button class="nav-tab" data-tab="reading">
+                            <span class="mr-2">📖</span> Mes Lectures
+                        </button>
+                        <button class="nav-tab" data-tab="profile">
+                            <span class="mr-2">👤</span> Mon Profil
+                        </button>
+                        <button class="nav-tab admin-tab hidden" data-tab="admin" style="display: none;">
+                            <span class="mr-2">🔧</span> Administration
+                        </button>
                     </div>
-                    
-                    <div class="chapter-grid">
-                        ${createChapterButtons(webtoon.id, Math.min(webtoon.chapters, 50))}
+                </div>
+            </nav>
+
+            <!-- Navigation mobile -->
+            <div class="mobile-nav bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 flex justify-around py-2 sm:hidden">
+                <button class="mobile-nav-tab text-primary" data-tab="home">
+                    <div class="text-center">
+                        <div class="text-xl mb-1">🏠</div>
+                        <div class="text-xs">Accueil</div>
                     </div>
-                    
-                    <textarea class="notes-textarea" placeholder="✏️ Vos notes personnelles..." 
-                        onchange="saveNotes(${webtoon.id}, this.value)">${notes}</textarea>
-                `;
-                grid.appendChild(card);
-            });
-            updateStats();
-        }
+                </button>
+                <button class="mobile-nav-tab" data-tab="favorites">
+                    <div class="text-center">
+                        <div class="text-xl mb-1">⭐</div>
+                        <div class="text-xs">Favoris</div>
+                    </div>
+                </button>
+                <button class="mobile-nav-tab" data-tab="reading">
+                    <div class="text-center">
+                        <div class="text-xl mb-1">📖</div>
+                        <div class="text-xs">Lectures</div>
+                    </div>
+                </button>
+                <button class="mobile-nav-tab" data-tab="profile">
+                    <div class="text-center">
+                        <div class="text-xl mb-1">👤</div>
+                        <div class="text-xs">Profil</div>
+                    </div>
+                </button>
+            </div>
 
-        function createChapterButtons(webtoonId, maxChapters) {
-            let buttons = '';
-            for (let i = 1; i <= maxChapters; i++) {
-                const isRead = userProgress[webtoonId] && userProgress[webtoonId][i];
-                buttons += `<button class="chapter-btn ${isRead ? 'read' : ''}" 
-                    onclick="toggleChapter(${webtoonId}, ${i})">${i}</button>`;
-            }
-            return buttons;
-        }
+            <!-- Contenu principal -->
+            <main class="max-w-7xl mx-auto p-6 pb-20">
+                <!-- Onglet Accueil -->
+                <div id="homeTab" class="tab-content">
+                    <div class="mb-6">
+                        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                            <div class="flex-1">
+                                <div class="relative">
+                                    <input
+                                        type="text"
+                                        id="searchInput"
+                                        placeholder="🔍 Rechercher un webtoon..."
+                                        class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                                    />
+                                </div>
+                            </div>
+                            <button id="clearSearch" class="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl transition-colors">
+                                Effacer
+                            </button>
+                        </div>
+                        <div id="searchResults" class="text-sm text-gray-600 mb-4"></div>
+                    </div>
 
-        function toggleChapter(webtoonId, chapter) {
-            if (!userProgress[webtoonId]) userProgress[webtoonId] = {};
-            userProgress[webtoonId][chapter] = !userProgress[webtoonId][chapter];
-            displayWebtoons();
-            localStorage.setItem(`progress_${currentUser.id}`, JSON.stringify(userProgress));
-        }
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold gradient-text mb-4 flex items-center">
+                            <span class="mr-3">📚</span> Collection de Webtoons
+                        </h2>
+                        <div id="webtoonsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Les webtoons seront générés ici par JavaScript -->
+                        </div>
+                    </div>
+                </div>
 
-        function toggleFavorite(webtoonId) {
-            if (userFavorites.has(webtoonId)) {
-                userFavorites.delete(webtoonId);
-            } else {
-                userFavorites.add(webtoonId);
-            }
-            displayWebtoons();
-            localStorage.setItem(`favorites_${currentUser.id}`, JSON.stringify([...userFavorites]));
-        }
+                <!-- Onglet Favoris -->
+                <div id="favoritesTab" class="tab-content hidden">
+                    <div class="text-center py-12">
+                        <div class="text-6xl mb-4">⭐</div>
+                        <h2 class="text-2xl font-bold gradient-text mb-4">Mes Favoris</h2>
+                        <div id="favoritesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Les favoris seront générés ici -->
+                        </div>
+                        <div id="noFavorites" class="text-gray-500">
+                            Vous n'avez pas encore de favoris. Cliquez sur l'étoile d'un webtoon pour l'ajouter !
+                        </div>
+                    </div>
+                </div>
 
-        function saveNotes(webtoonId, notes) {
-            userNotes[webtoonId] = notes;
-            localStorage.setItem(`notes_${currentUser.id}`, JSON.stringify(userNotes));
-        }
+                <!-- Onglet Mes Lectures -->
+                <div id="readingTab" class="tab-content hidden">
+                    <div class="text-center py-8">
+                        <div class="text-6xl mb-4">📖</div>
+                        <h2 class="text-2xl font-bold gradient-text mb-6">Mes Lectures</h2>
+                        <div id="readingList" class="space-y-6">
+                            <!-- La liste de lecture sera générée ici -->
+                        </div>
+                    </div>
+                </div>
 
-        function searchWebtoons() {
-            const searchTerm = document.getElementById('search-input').value.toLowerCase();
-            if (searchTerm.trim() === '') {
-                filteredWebtoons = currentView === 'favorites' 
-                    ? webtoons.filter(w => userFavorites.has(w.id))
-                    : [...webtoons];
-            } else {
-                const baseWebtoons = currentView === 'favorites' 
-                    ? webtoons.filter(w => userFavorites.has(w.id))
-                    : webtoons;
-                filteredWebtoons = baseWebtoons.filter(w => 
-                    w.title.toLowerCase().includes(searchTerm) ||
-                    w.platform.toLowerCase().includes(searchTerm) ||
-                    w.description.toLowerCase().includes(searchTerm)
-                );
-            }
-            
-            document.getElementById('search-results').textContent = 
-                `${filteredWebtoons.length} résultat(s) trouvé(s)`;
-            displayWebtoons();
-        }
+                <!-- Onglet Profil -->
+                <div id="profileTab" class="tab-content hidden">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="bg-white rounded-2xl shadow-lg p-8">
+                            <div class="text-center mb-8">
+                                <div class="w-24 h-24 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span class="text-white text-3xl">👤</span>
+                                </div>
+                                <h2 class="text-2xl font-bold gradient-text">Mon Profil</h2>
+                                <p id="profileEmail" class="text-gray-600 mt-2"></p>
+                            </div>
 
-        function clearSearch() {
-            document.getElementById('search-input').value = '';
-            document.getElementById('search-results').textContent = '';
-            searchWebtoons();
-        }
-
-        function updateStats() {
-            document.getElementById('total-webtoons').textContent = webtoons.length;
-            document.getElementById('favorites-count').textContent = userFavorites.size;
-            
-            let totalChapters = 0, readChapters = 0;
-            webtoons.forEach(webtoon => {
-                totalChapters += webtoon.chapters;
-                const progress = userProgress[webtoon.id] || {};
-                readChapters += Object.keys(progress).length;
-            });
-            
-            const progressPercent = totalChapters > 0 ? Math.round((readChapters / totalChapters) * 100) : 0;
-            document.getElementById('reading-progress').textContent = progressPercent + '%';
-        }
-
-        // Initialisation au chargement
-        window.addEventListener('load', function() {
-            // Charger les infos sauvegardées
-            if (localStorage.getItem('rememberMe') === 'true') {
-                document.getElementById('email').value = localStorage.getItem('savedEmail') || '';
-                document.getElementById('password').value = localStorage.getItem('savedPassword') || '';
-                document.getElementById('remember-me').checked = true;
-            }
-            
-            console.log('🚀 WEBTOON Tracer chargé');
-            console.log('📡 URL Supabase:', SUPABASE_URL);
-            console.log('🔑 N\'oubliez pas de remplacer SUPABASE_KEY !');
-        });
-    </script>
-</body>
-</html>
-
-
-
+                            <div class="space-y-6">
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                    <div class="text-center p-4 bg-gradient-to-r from-pink-50 to-cyan-50 rounded-xl">
+                                        <div class="text-2xl font-bold gradient-text" id="totalWebtoons">0</div>
+                                        <div class="text-sm text-gray-600">Webtoons</div>
+                                    </div>
+                                    <div class="text-center p-4 bg-gradient-to-r from-pink-50 to-cyan-50 rounded-xl">
+                                        <div class="text-2xl font-bold gradient-text" id="totalFavorites">0</div>
+                                        <div class="text-sm text-gray-600">Favoris</div>
+                                    </div>
+                                    <div class="text-center p-4 bg-gradient-to-r from-pink-50 to-cyan-50 rounded-xl">
+                                        <div class="text-2xl font-bold gradient-text" id="readingProgress">0%</div>
+                                        <div class="text-sm text-gray-600">Progression</div>
+                                    </div>
+                                </div
