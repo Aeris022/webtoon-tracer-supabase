@@ -593,7 +593,11 @@
 
                 // Connecter automatiquement le nouvel utilisateur
                 this.login(newUser, false);
-                alert('Compte créé avec succès ! Vous êtes maintenant connecté.');
+                
+                // Redirection automatique vers la page d'accueil
+                setTimeout(() => {
+                    alert('Compte créé avec succès ! Redirection vers votre tableau de bord...');
+                }, 100);
             }
 
             handleForgotPassword(e) {
