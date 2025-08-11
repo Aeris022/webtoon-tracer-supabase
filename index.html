@@ -829,4 +829,894 @@
         </div>
     </div>
 
-    <!-- Tableau de
+    <!-- Tableau de Bord Principal -->
+    <div id="dashboard" class="hidden">
+        <div class="container">
+            <!-- En-tête -->
+            <header class="header">
+                <div class="header-content">
+                    <div class="logo">🌟 WEBTOON Tracer</div>
+                    
+                    <nav class="nav-tabs">
+                        <button class="nav-tab active" data-tab="home">🏠 Accueil</button>
+                        <button class="nav-tab" data-tab="favorites">⭐ Mes favoris</button>
+                        <button class="nav-tab" data-tab="reading">📖 Mes lectures</button>
+                        <button class="nav-tab" data-tab="profile">👤 Mon compte</button>
+                        <button class="nav-tab admin-tab hidden" data-tab="admin">⚙️ Admin</button>
+                    </nav>
+                    
+                    <div class="user-info">
+                        <span id="userInfo">Utilisateur</span>
+                        <button id="logoutBtn" class="btn-logout">Déconnexion</button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Onglet Accueil -->
+            <div id="homeTab" class="tab-content">
+                <div class="search-section">
+                    <div class="search-container">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Rechercher un webtoon...">
+                        <button id="clearSearch" class="clear-search">✕</button>
+                    </div>
+                    <div id="searchResults" class="search-results"></div>
+                </div>
+                
+                <div id="webtoonsGrid" class="webtoons-grid"></div>
+            </div>
+
+            <!-- Onglet Favoris -->
+            <div id="favoritesTab" class="tab-content hidden">
+                <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem; color: var(--primary);">⭐ Mes Favoris</h2>
+                
+                <div id="noFavorites" class="empty-state" style="display: none;">
+                    <div class="empty-icon">⭐</div>
+                    <p>Aucun favori pour le moment. Ajoutez des webtoons à vos favoris depuis l'accueil !</p>
+                </div>
+                
+                <div id="favoritesGrid" class="webtoons-grid"></div>
+            </div>
+
+            <!-- Onglet Mes Lectures -->
+            <div id="readingTab" class="tab-content hidden">
+                <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem; color: var(--primary);">📖 Progression de Lecture</h2>
+                <div id="readingList"></div>
+            </div>
+
+            <!-- Onglet Profil -->
+            <div id="profileTab" class="tab-content hidden">
+                <div class="profile-section">
+                    <div class="profile-header">
+                        <div class="profile-avatar">👤</div>
+                        <h2 id="profileEmail" style="font-size: 1.5rem; margin-bottom: 10px;">Utilisateur</h2>
+                        <p style="color: var(--text-secondary);">Membre actif</p>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div id="totalWebtoons" class="stat-number">0</div>
+                            <div class="stat-label">Webtoons disponibles</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div id="totalFavorites" class="stat-number">0</div>
+                            <div class="stat-label">Favoris</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div id="readingProgress" class="stat-number">0%</div>
+                            <div class="stat-label">Progression totale</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Onglet Admin -->
+            <div id="adminTab" class="tab-content hidden">
+                <div class="admin-section">
+                    <div class="admin-header">
+                        <h2 class="admin-title">⚙️ Administration</h2>
+                        <p style="color: var(--text-secondary);">Gestion des webtoons et utilisateurs</p>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button id="addWebtoonBtn" class="btn-add">+ Ajouter un Webtoon</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Mobile -->
+            <nav class="mobile-nav">
+                <div class="mobile-nav-tabs">
+                    <button class="mobile-nav-tab active" data-tab="home">
+                        <div class="mobile-nav-icon">🏠</div>
+                        <span>Accueil</span>
+                    </button>
+                    <button class="mobile-nav-tab" data-tab="favorites">
+                        <div class="mobile-nav-icon">⭐</div>
+                        <span>Favoris</span>
+                    </button>
+                    <button class="mobile-nav-tab" data-tab="reading">
+                        <div class="mobile-nav-icon">📖</div>
+                        <span>Lectures</span>
+                    </button>
+                    <button class="mobile-nav-tab" data-tab="profile">
+                        <div class="mobile-nav-icon">👤</div>
+                        <span>Profil</span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Modal Notes -->
+    <div id="notesModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="notesModalTitle" class="modal-title">Notes</h3>
+                <button id="closeNotesModal" class="btn-close">✕</button>
+            </div>
+            
+            <textarea id="notesTextarea" class="textarea" placeholder="Ajoutez vos notes personnelles ici..."></textarea>
+            
+            <div class="modal-actions">
+                <button id="cancelNotes" class="btn-secondary">Annuler</button>
+                <button id="saveNotes" class="btn-primary">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ajouter Webtoon -->
+    <div id="addWebtoonModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Ajouter un Webtoon</h3>
+                <button id="closeAddModal" class="btn-close">✕</button>
+            </div>
+            
+            <form id="addWebtoonForm">
+                <div class="form-group">
+                    <label for="newTitle">Titre</label>
+                    <input type="text" id="newTitle" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newAuthor">Auteur</label>
+                    <input type="text" id="newAuthor" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newGenre">Genre</label>
+                    <input type="text" id="newGenre" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newPlatform">Plateforme</label>
+                    <input type="text" id="newPlatform" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newStatus">Statut</label>
+                    <select id="newStatus" class="form-input" required>
+                        <option value="">Sélectionner...</option>
+                        <option value="En cours">En cours</option>
+                        <option value="Terminé">Terminé</option>
+                        <option value="En pause">En pause</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newRating">Note (sur 100)</label>
+                    <input type="number" id="newRating" class="form-input" min="0" max="100" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newChapters">Nombre de chapitres</label>
+                    <input type="number" id="newChapters" class="form-input" min="1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newDescription">Description</label>
+                    <textarea id="newDescription" class="textarea" required></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" id="cancelAdd" class="btn-secondary">Annuler</button>
+                    <button type="submit" class="btn-primary">Ajouter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Application WEBTOON Tracer - Version complète
+        class WebtoonTracer {
+            constructor() {
+                this.currentUser = null;
+                this.isAuthenticated = false;
+                this.webtoons = [];
+                this.favorites = new Set();
+                this.currentTab = 'home';
+                this.searchTerm = '';
+                
+                this.initializeApp();
+            }
+
+            getDemoWebtoons() {
+                return [
+                    {
+                        id: 1,
+                        title: "Tower of God",
+                        author: "SIU",
+                        genre: "Action",
+                        platform: "Webtoon",
+                        status: "En cours",
+                        rating: 95,
+                        chapters: 300,
+                        description: "Un garçon escalade une tour mystérieuse pour retrouver son amie.",
+                        image: "📗"
+                    },
+                    {
+                        id: 2,
+                        title: "Solo Leveling",
+                        author: "Chugong",
+                        genre: "Action",
+                        platform: "Webtoon",
+                        status: "Terminé",
+                        rating: 98,
+                        chapters: 179,
+                        description: "Un chasseur faible devient le plus puissant au monde.",
+                        image: "⚔️"
+                    },
+                    {
+                        id: 3,
+                        title: "UnOrdinary",
+                        author: "uru-chan",
+                        genre: "Drame",
+                        platform: "Webtoon",
+                        status: "En cours",
+                        rating: 89,
+                        chapters: 250,
+                        description: "Dans un monde de super-pouvoirs, John cache son vrai pouvoir.",
+                        image: "⚡"
+                    }
+                ];
+            }
+
+            getDemoUsers() {
+                return [
+                    {
+                        id: 1,
+                        email: 'erisaudrey@gmail.com',
+                        password: 'password123',
+                        isAdmin: true
+                    }
+                ];
+            }
+
+            initializeApp() {
+                this.webtoons = this.getDemoWebtoons();
+                this.users = this.getDemoUsers();
+                this.loadFromStorage();
+                this.checkAuthentication();
+                this.setupEventListeners();
+                this.showPage();
+            }
+
+            checkAuthentication() {
+                const savedUser = localStorage.getItem('webtoon_user');
+                const rememberMe = localStorage.getItem('webtoon_remember_me') === 'true';
+                
+                if (savedUser && rememberMe) {
+                    this.currentUser = JSON.parse(savedUser);
+                    this.isAuthenticated = true;
+                }
+            }
+
+            showPage() {
+                const loginPage = document.getElementById('loginPage');
+                const dashboard = document.getElementById('dashboard');
+                
+                if (this.isAuthenticated) {
+                    loginPage.classList.add('hidden');
+                    dashboard.classList.remove('hidden');
+                    this.setupDashboard();
+                } else {
+                    loginPage.classList.remove('hidden');
+                    dashboard.classList.add('hidden');
+                }
+            }
+
+            setupEventListeners() {
+                const loginForm = document.getElementById('loginForm');
+                if (loginForm) {
+                    loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+                }
+
+                const logoutBtn = document.getElementById('logoutBtn');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', () => this.handleLogout());
+                }
+
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        const tabName = e.currentTarget.dataset.tab;
+                        this.switchTab(tabName);
+                    });
+                });
+
+                document.querySelectorAll('.mobile-nav-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        const tabName = e.currentTarget.dataset.tab;
+                        this.switchTab(tabName);
+                    });
+                });
+
+                const searchInput = document.getElementById('searchInput');
+                const clearSearch = document.getElementById('clearSearch');
+                
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => {
+                        this.searchTerm = e.target.value.toLowerCase();
+                        this.renderWebtoons();
+                        this.updateSearchResults();
+                    });
+                }
+
+                if (clearSearch) {
+                    clearSearch.addEventListener('click', () => {
+                        searchInput.value = '';
+                        this.searchTerm = '';
+                        this.renderWebtoons();
+                        this.updateSearchResults();
+                    });
+                }
+
+                const closeNotesModal = document.getElementById('closeNotesModal');
+                const cancelNotes = document.getElementById('cancelNotes');
+                const saveNotes = document.getElementById('saveNotes');
+
+                if (closeNotesModal) closeNotesModal.addEventListener('click', () => this.closeNotesModal());
+                if (cancelNotes) cancelNotes.addEventListener('click', () => this.closeNotesModal());
+                if (saveNotes) saveNotes.addEventListener('click', () => this.saveNotes());
+
+                const addWebtoonBtn = document.getElementById('addWebtoonBtn');
+                const closeAddModal = document.getElementById('closeAddModal');
+                const addWebtoonForm = document.getElementById('addWebtoonForm');
+
+                if (addWebtoonBtn) addWebtoonBtn.addEventListener('click', () => this.showAddWebtoonModal());
+                if (closeAddModal) closeAddModal.addEventListener('click', () => this.closeAddWebtoonModal());
+                if (addWebtoonForm) addWebtoonForm.addEventListener('submit', (e) => this.handleAddWebtoon(e));
+            }
+
+            handleLogin(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const rememberMe = document.getElementById('rememberMe').checked;
+
+                const user = this.users.find(u => u.email === email && u.password === password);
+                
+                if (user) {
+                    this.currentUser = user;
+                    this.isAuthenticated = true;
+                    
+                    if (rememberMe) {
+                        localStorage.setItem('webtoon_user', JSON.stringify(user));
+                        localStorage.setItem('webtoon_remember_me', 'true');
+                        localStorage.setItem('webtoon_email', email);
+                        localStorage.setItem('webtoon_password', password);
+                    }
+                    
+                    this.showPage();
+                } else {
+                    alert('Email ou mot de passe incorrect');
+                }
+            }
+
+            handleLogout() {
+                this.currentUser = null;
+                this.isAuthenticated = false;
+                localStorage.removeItem('webtoon_user');
+                localStorage.removeItem('webtoon_remember_me');
+                this.showPage();
+            }
+
+            setupDashboard() {
+                const userInfo = document.getElementById('userInfo');
+                if (userInfo && this.currentUser) {
+                    if (this.currentUser.email === 'erisaudrey@gmail.com') {
+                        userInfo.textContent = this.currentUser.email;
+                    } else {
+                        userInfo.textContent = 'Utilisateur connecté';
+                    }
+                }
+
+                const adminTab = document.querySelector('.admin-tab');
+                if (adminTab) {
+                    if (this.currentUser && this.currentUser.isAdmin) {
+                        adminTab.style.display = 'block';
+                        adminTab.classList.remove('hidden');
+                    } else {
+                        adminTab.style.display = 'none';
+                        adminTab.classList.add('hidden');
+                    }
+                }
+
+                this.renderWebtoons();
+                this.updateStats();
+                this.switchTab('home');
+            }
+
+            switchTab(tabName) {
+                this.currentTab = tabName;
+
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+
+                document.querySelectorAll('.nav-tab, .mobile-nav-tab').forEach(tab => {
+                    tab.classList.remove('active', 'text-primary');
+                });
+
+                const tabContent = document.getElementById(tabName + 'Tab');
+                if (tabContent) {
+                    tabContent.classList.remove('hidden');
+                }
+
+                document.querySelectorAll(`[data-tab="${tabName}"]`).forEach(tab => {
+                    tab.classList.add('active');
+                    if (tab.classList.contains('mobile-nav-tab')) {
+                        tab.classList.add('text-primary');
+                    }
+                });
+
+                switch(tabName) {
+                    case 'home':
+                        this.renderWebtoons();
+                        break;
+                    case 'favorites':
+                        this.renderFavorites();
+                        break;
+                    case 'reading':
+                        this.renderReadingList();
+                        break;
+                    case 'profile':
+                        this.renderProfile();
+                        break;
+                    case 'admin':
+                        if (this.currentUser && this.currentUser.isAdmin) {
+                            this.renderAdmin();
+                        }
+                        break;
+                }
+            }
+
+            renderWebtoons() {
+                const grid = document.getElementById('webtoonsGrid');
+                if (!grid) return;
+
+                const filteredWebtoons = this.webtoons.filter(webtoon => 
+                    webtoon.title.toLowerCase().includes(this.searchTerm) ||
+                    webtoon.author.toLowerCase().includes(this.searchTerm) ||
+                    webtoon.genre.toLowerCase().includes(this.searchTerm) ||
+                    webtoon.platform.toLowerCase().includes(this.searchTerm)
+                );
+
+                grid.innerHTML = filteredWebtoons.map(webtoon => `
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all transform hover:scale-105">
+                        <div class="p-6">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="text-4xl">${webtoon.image}</div>
+                                <button 
+                                    class="favorite-btn ${this.favorites.has(webtoon.id) ? 'active' : ''}"
+                                    onclick="app.toggleFavorite(${webtoon.id})"
+                                >
+                                    ⭐
+                                </button>
+                            </div>
+                            
+                            <h3 class="text-xl font-bold mb-2 text-gray-800">${webtoon.title}</h3>
+                            <p class="text-gray-600 text-sm mb-3">${webtoon.description}</p>
+                            
+                            <div class="space-y-2 text-sm">
+                                <div class="flex items-center">
+                                    <span class="mr-2">👤</span>
+                                    <span class="text-gray-700">Auteur: ${webtoon.author}</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="mr-2">🏷️</span>
+                                    <span class="text-gray-700">Genre: ${webtoon.genre}</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="mr-2">📱</span>
+                                    <span class="text-gray-700">Plateforme: ${webtoon.platform}</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="mr-2">📊</span>
+                                    <span class="text-gray-700">Statut: ${webtoon.status}</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="mr-2">⭐</span>
+                                    <span class="text-gray-700">Note: ${webtoon.rating}/100</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <button 
+                                    class="w-full bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-xl transition-colors text-sm font-medium"
+                                    onclick="app.openNotes(${webtoon.id})"
+                                >
+                                    📝 Mes Notes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            renderFavorites() {
+                const grid = document.getElementById('favoritesGrid');
+                const noFavorites = document.getElementById('noFavorites');
+                
+                if (!grid || !noFavorites) return;
+
+                const favoriteWebtoons = this.webtoons.filter(w => this.favorites.has(w.id));
+
+                if (favoriteWebtoons.length === 0) {
+                    grid.innerHTML = '';
+                    noFavorites.style.display = 'block';
+                } else {
+                    noFavorites.style.display = 'none';
+                    grid.innerHTML = favoriteWebtoons.map(webtoon => `
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all transform hover:scale-105">
+                            <div class="p-6">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div class="text-4xl">${webtoon.image}</div>
+                                    <button 
+                                        class="favorite-btn active"
+                                        onclick="app.toggleFavorite(${webtoon.id})"
+                                    >
+                                        ⭐
+                                    </button>
+                                </div>
+                                
+                                <h3 class="text-xl font-bold mb-2 text-gray-800">${webtoon.title}</h3>
+                                <p class="text-gray-600 text-sm mb-3">${webtoon.description}</p>
+                                
+                                <div class="mt-4 pt-4 border-t border-gray-100">
+                                    <button 
+                                        class="w-full bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-xl transition-colors text-sm font-medium"
+                                        onclick="app.openNotes(${webtoon.id})"
+                                    >
+                                        📝 Mes Notes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            renderReadingList() {
+                const readingList = document.getElementById('readingList');
+                if (!readingList) return;
+
+                const favoriteWebtoons = this.webtoons.filter(w => this.favorites.has(w.id));
+
+                if (favoriteWebtoons.length === 0) {
+                    readingList.innerHTML = `
+                        <div class="text-center text-gray-500">
+                            <div class="text-6xl mb-4">📖</div>
+                            <p>Ajoutez des webtoons à vos favoris pour commencer à suivre votre progression !</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                readingList.innerHTML = favoriteWebtoons.map(webtoon => {
+                    const progress = this.getReadingProgress(webtoon.id);
+                    const percentage = webtoon.chapters > 0 ? Math.round((progress.chaptersRead / webtoon.chapters) * 100) : 0;
+                    
+                    return `
+                        <div class="bg-white rounded-2xl shadow-lg p-6">
+                            <div class="flex items-start space-x-6">
+                                <div class="text-4xl">${webtoon.image}</div>
+                                <div class="flex-1">
+                                    <h3 class="text-xl font-bold mb-2">${webtoon.title}</h3>
+                                    <div class="flex items-center space-x-4 text-sm text-gray-600 mb-4">
+                                        <span>📱 Plateforme: ${webtoon.platform}</span>
+                                        <span>📊 Progression: ${progress.chaptersRead}/${webtoon.chapters} (${percentage}%)</span>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-sm font-medium text-gray-700">Progression</span>
+                                            <span class="text-sm text-gray-500">${percentage}%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-gradient-to-r from-pink-500 to-cyan-500 h-2 rounded-full" style="width: ${percentage}%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    ${webtoon.chapters <= 50 ? `
+                                        <div class="grid grid-cols-10 gap-2 mb-4">
+                                            ${Array.from({length: webtoon.chapters}, (_, i) => {
+                                                const chapterNum = i + 1;
+                                                const isRead = progress.readChapters.includes(chapterNum);
+                                                return `
+                                                    <button 
+                                                        class="w-8 h-8 text-xs rounded-lg border-2 transition-all ${
+                                                            isRead 
+                                                                ? 'bg-green-500 text-white border-green-500' 
+                                                                : 'bg-white text-gray-600 border-gray-300 hover:border-primary'
+                                                        }"
+                                                        onclick="app.toggleChapter(${webtoon.id}, ${chapterNum})"
+                                                        title="Chapitre ${chapterNum}"
+                                                    >
+                                                        ${chapterNum}
+                                                    </button>
+                                                `;
+                                            }).join('')}
+                                        </div>
+                                    ` : `
+                                        <p class="text-sm text-gray-500 mb-4">
+                                            Trop de chapitres pour afficher la grille (${webtoon.chapters} chapitres)
+                                        </p>
+                                    `}
+                                    
+                                    <button 
+                                        class="bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-xl transition-colors text-sm font-medium"
+                                        onclick="app.openNotes(${webtoon.id})"
+                                    >
+                                        📝 Mes Notes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            renderProfile() {
+                const profileEmail = document.getElementById('profileEmail');
+                const totalWebtoons = document.getElementById('totalWebtoons');
+                const totalFavorites = document.getElementById('totalFavorites');
+                const readingProgress = document.getElementById('readingProgress');
+
+                if (profileEmail && this.currentUser) {
+                    if (this.currentUser.email === 'erisaudrey@gmail.com') {
+                        profileEmail.textContent = this.currentUser.email;
+                    } else {
+                        profileEmail.textContent = 'Utilisateur connecté';
+                    }
+                }
+
+                if (totalWebtoons) totalWebtoons.textContent = this.webtoons.length;
+                if (totalFavorites) totalFavorites.textContent = this.favorites.size;
+                
+                if (readingProgress) {
+                    const totalChapters = this.webtoons.reduce((sum, w) => sum + w.chapters, 0);
+                    const readChapters = this.webtoons.reduce((sum, w) => {
+                        const progress = this.getReadingProgress(w.id);
+                        return sum + progress.chaptersRead;
+                    }, 0);
+                    
+                    const percentage = totalChapters > 0 ? Math.round((readChapters / totalChapters) * 100) : 0;
+                    readingProgress.textContent = `${percentage}%`;
+                }
+            }
+
+            renderAdmin() {
+                // Interface admin déjà dans le HTML
+            }
+
+            toggleFavorite(webtoonId) {
+                if (this.favorites.has(webtoonId)) {
+                    this.favorites.delete(webtoonId);
+                } else {
+                    this.favorites.add(webtoonId);
+                }
+                
+                this.saveToStorage();
+                this.updateStats();
+                
+                if (this.currentTab === 'home') {
+                    this.renderWebtoons();
+                } else if (this.currentTab === 'favorites') {
+                    this.renderFavorites();
+                } else if (this.currentTab === 'reading') {
+                    this.renderReadingList();
+                }
+            }
+
+            toggleChapter(webtoonId, chapterNum) {
+                const progressKey = `progress_${webtoonId}`;
+                let progress = JSON.parse(localStorage.getItem(progressKey) || '{"readChapters": []}');
+                
+                const index = progress.readChapters.indexOf(chapterNum);
+                if (index > -1) {
+                    progress.readChapters.splice(index, 1);
+                } else {
+                    progress.readChapters.push(chapterNum);
+                }
+                
+                progress.readChapters.sort((a, b) => a - b);
+                localStorage.setItem(progressKey, JSON.stringify(progress));
+                
+                this.renderReadingList();
+            }
+
+            getReadingProgress(webtoonId) {
+                const progressKey = `progress_${webtoonId}`;
+                const progress = JSON.parse(localStorage.getItem(progressKey) || '{"readChapters": []}');
+                
+                return {
+                    readChapters: progress.readChapters || [],
+                    chaptersRead: (progress.readChapters || []).length
+                };
+            }
+
+            openNotes(webtoonId) {
+                const webtoon = this.webtoons.find(w => w.id === webtoonId);
+                if (!webtoon) return;
+
+                this.currentNotesWebtoonId = webtoonId;
+                
+                const modal = document.getElementById('notesModal');
+                const title = document.getElementById('notesModalTitle');
+                const textarea = document.getElementById('notesTextarea');
+                
+                if (modal && title && textarea) {
+                    title.textContent = `Notes - ${webtoon.title}`;
+                    
+                    const notesKey = `notes_${webtoonId}`;
+                    const savedNotes = localStorage.getItem(notesKey) || '';
+                    textarea.value = savedNotes;
+                    
+                    modal.classList.remove('hidden');
+                }
+            }
+
+            closeNotesModal() {
+                const modal = document.getElementById('notesModal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                }
+                this.currentNotesWebtoonId = null;
+            }
+
+            saveNotes() {
+                if (!this.currentNotesWebtoonId) return;
+                
+                const textarea = document.getElementById('notesTextarea');
+                if (textarea) {
+                    const notesKey = `notes_${this.currentNotesWebtoonId}`;
+                    localStorage.setItem(notesKey, textarea.value);
+                }
+                
+                this.closeNotesModal();
+            }
+
+            showAddWebtoonModal() {
+                const modal = document.getElementById('addWebtoonModal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                }
+            }
+
+            closeAddWebtoonModal() {
+                const modal = document.getElementById('addWebtoonModal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                }
+                
+                const form = document.getElementById('addWebtoonForm');
+                if (form) {
+                    form.reset();
+                }
+            }
+
+            handleAddWebtoon(e) {
+                e.preventDefault();
+                
+                const title = document.getElementById('newTitle').value;
+                const author = document.getElementById('newAuthor').value;
+                const genre = document.getElementById('newGenre').value;
+                const platform = document.getElementById('newPlatform').value;
+                const status = document.getElementById('newStatus').value;
+                const rating = parseInt(document.getElementById('newRating').value);
+                const chapters = parseInt(document.getElementById('newChapters').value);
+                const description = document.getElementById('newDescription').value;
+
+                const newWebtoon = {
+                    id: Date.now(),
+                    title,
+                    author,
+                    genre,
+                    platform,
+                    status,
+                    rating,
+                    chapters,
+                    description,
+                    image: "📖"
+                };
+
+                this.webtoons.push(newWebtoon);
+                this.saveToStorage();
+                this.closeAddWebtoonModal();
+                
+                if (this.currentTab === 'home') {
+                    this.renderWebtoons();
+                }
+                
+                alert('Webtoon ajouté avec succès !');
+            }
+
+            updateSearchResults() {
+                const searchResults = document.getElementById('searchResults');
+                if (!searchResults) return;
+
+                if (this.searchTerm) {
+                    const filteredCount = this.webtoons.filter(webtoon => 
+                        webtoon.title.toLowerCase().includes(this.searchTerm) ||
+                        webtoon.author.toLowerCase().includes(this.searchTerm) ||
+                        webtoon.genre.toLowerCase().includes(this.searchTerm) ||
+                        webtoon.platform.toLowerCase().includes(this.searchTerm)
+                    ).length;
+                    
+                    searchResults.textContent = `${filteredCount} résultat(s) trouvé(s) pour "${this.searchTerm}"`;
+                } else {
+                    searchResults.textContent = '';
+                }
+            }
+
+            updateStats() {
+                this.renderProfile();
+            }
+
+            saveToStorage() {
+                localStorage.setItem('webtoon_favorites', JSON.stringify([...this.favorites]));
+                localStorage.setItem('webtoon_data', JSON.stringify(this.webtoons));
+            }
+
+            loadFromStorage() {
+                const savedFavorites = localStorage.getItem('webtoon_favorites');
+                if (savedFavorites) {
+                    this.favorites = new Set(JSON.parse(savedFavorites));
+                }
+
+                const savedWebtoons = localStorage.getItem('webtoon_data');
+                if (savedWebtoons) {
+                    try {
+                        const parsed = JSON.parse(savedWebtoons);
+                        if (parsed.length > this.webtoons.length) {
+                            this.webtoons = parsed;
+                        }
+                    } catch (e) {
+                        console.log('Erreur lors du chargement des webtoons sauvegardés');
+                    }
+                }
+
+                const rememberMe = localStorage.getItem('webtoon_remember_me') === 'true';
+                if (rememberMe) {
+                    const savedEmail = localStorage.getItem('webtoon_email');
+                    const savedPassword = localStorage.getItem('webtoon_password');
+                    
+                    const emailInput = document.getElementById('email');
+                    const passwordInput = document.getElementById('password');
+                    const rememberCheckbox = document.getElementById('rememberMe');
+                    
+                    if (emailInput && savedEmail) emailInput.value = savedEmail;
+                    if (passwordInput && savedPassword) passwordInput.value = savedPassword;
+                    if (rememberCheckbox) rememberCheckbox.checked = true;
+                }
+            }
+        }
+
+        // Initialiser l'application
+        const app = new WebtoonTracer();
+    </script>
+</body>
+</html>
