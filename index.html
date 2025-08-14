@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEBTOON Tracer - Suivi de Lecture</title>
+    <title>WEBTOON Tracer - Présentation 2 (Version de Travail)</title>
     <style>
         :root {
             --primary: #ec4899;
@@ -15,6 +15,19 @@
             --text-secondary: #6b7280;
             --border: #e5e7eb;
             --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --card-bg: #1f2937;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --border: #374151;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         }
 
         * {
@@ -111,6 +124,39 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+        .btn-link:hover {
+            color: var(--primary-hover);
         }
 
         /* En-tête */
@@ -1017,6 +1063,164 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--primary-hover);
         }
+
+        /* Calendrier */
+        .calendar-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-nav {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .calendar-nav:hover {
+            background: var(--primary-hover);
+        }
+
+        .calendar-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .calendar-day-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .calendar-day {
+            background: var(--card-bg);
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            position: relative;
+            min-height: 60px;
+        }
+
+        .calendar-day:hover {
+            background: #f1f5f9;
+        }
+
+        .calendar-day.today {
+            background: var(--primary);
+            color: white;
+        }
+
+        .calendar-day.has-release {
+            background: #fef3c7;
+            color: var(--warning);
+            font-weight: bold;
+        }
+
+        .calendar-day.has-release::after {
+            content: '📖';
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            font-size: 12px;
+        }
+
+        .upcoming-releases {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .upcoming-releases h3 {
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .releases-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .release-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .release-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .release-title {
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .release-date {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .other-month {
+            opacity: 0.3;
+        }
+
+        .release-chapter {
+            background: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .calendar-days {
+            display: contents;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinning {
+            animation: spin 1s linear infinite;
+        }
     </style>
 </head>
 <body>
@@ -1043,6 +1247,11 @@
                 </div>
                 
                 <button type="submit" class="btn-primary">Se connecter</button>
+                
+                <div style="margin-top: 20px; text-align: center;">
+                    <button type="button" id="createAccountBtn" class="btn-secondary" style="margin-bottom: 10px; width: 100%;">Créer un compte</button>
+                    <button type="button" id="forgotPasswordBtn" class="btn-link">Mot de passe oublié ?</button>
+                </div>
             </form>
         </div>
     </div>
@@ -1058,7 +1267,7 @@
                     <nav class="nav-tabs">
                         <button class="nav-tab active" data-tab="home">🏠 Accueil</button>
                         <button class="nav-tab" data-tab="favorites">⭐ Mes favoris</button>
-                        <button class="nav-tab" data-tab="reading">📖 Mes lectures</button>
+                        <button class="nav-tab" data-tab="calendar">📅 Calendrier</button>
                         <button class="nav-tab" data-tab="profile">👤 Mon espace</button>
                         <button class="nav-tab admin-tab hidden" data-tab="admin">⚙️ Administration</button>
                     </nav>
@@ -1095,10 +1304,35 @@
                 <div id="favoritesGrid" class="webtoons-grid"></div>
             </div>
 
-            <!-- Onglet Mes Lectures -->
-            <div id="readingTab" class="tab-content hidden">
-                <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem; color: var(--primary);">📖 Mes Lectures</h2>
-                <div id="readingList"></div>
+            <!-- Onglet Calendrier -->
+            <div id="calendarTab" class="tab-content hidden">
+                <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem; color: var(--primary);">📅 Calendrier de Sortie</h2>
+                
+                <div class="calendar-section">
+                    <div class="calendar-header">
+                        <button id="prevMonth" class="calendar-nav">‹</button>
+                        <h3 id="currentMonth" class="calendar-title">Janvier 2025</h3>
+                        <button id="nextMonth" class="calendar-nav">›</button>
+                    </div>
+                    
+                    <div class="calendar-grid">
+                        <div class="calendar-day-header">Lun</div>
+                        <div class="calendar-day-header">Mar</div>
+                        <div class="calendar-day-header">Mer</div>
+                        <div class="calendar-day-header">Jeu</div>
+                        <div class="calendar-day-header">Ven</div>
+                        <div class="calendar-day-header">Sam</div>
+                        <div class="calendar-day-header">Dim</div>
+                    </div>
+                    
+                    <div id="calendarDays" class="calendar-grid">
+                    </div>
+                    
+                    <div class="upcoming-releases">
+                        <h3>📖 Sorties à venir</h3>
+                        <div id="upcomingList" class="releases-list"></div>
+                    </div>
+                </div>
             </div>
 
             <!-- Onglet Mon Espace (Profil) -->
@@ -1120,13 +1354,13 @@
                         </div>
                         
                         <div class="stat-card">
-                            <div id="totalFavorites" class="stat-number">0</div>
-                            <div class="stat-label">Favoris</div>
+                            <div id="chaptersRead" class="stat-number">0</div>
+                            <div class="stat-label">Chapitres lus</div>
                         </div>
                         
                         <div class="stat-card">
-                            <div id="readingProgress" class="stat-number">0%</div>
-                            <div class="stat-label">Progression totale</div>
+                            <div id="accountAge" class="stat-number">0</div>
+                            <div class="stat-label">Jours d'activité</div>
                         </div>
                     </div>
                 </div>
@@ -1351,6 +1585,7 @@
                 this.searchTerm = '';
                 this.selectedWebtoons = new Set();
                 this.currentChaptersWebtoonId = null;
+                this.currentDate = new Date();
                 
                 this.initializeApp();
             }
@@ -1462,6 +1697,30 @@
                 const logoutBtn = document.getElementById('logoutBtn');
                 if (logoutBtn) {
                     logoutBtn.addEventListener('click', () => this.handleLogout());
+                }
+
+                // Nouveaux boutons de connexion
+                const createAccountBtn = document.getElementById('createAccountBtn');
+                const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+                
+                if (createAccountBtn) {
+                    createAccountBtn.addEventListener('click', () => this.handleCreateAccount());
+                }
+                
+                if (forgotPasswordBtn) {
+                    forgotPasswordBtn.addEventListener('click', () => this.handleForgotPassword());
+                }
+
+                // Calendrier
+                const prevMonth = document.getElementById('prevMonth');
+                const nextMonth = document.getElementById('nextMonth');
+                
+                if (prevMonth) {
+                    prevMonth.addEventListener('click', () => this.navigateMonth(-1));
+                }
+                
+                if (nextMonth) {
+                    nextMonth.addEventListener('click', () => this.navigateMonth(1));
                 }
 
                 // Navigation principale
@@ -1597,6 +1856,14 @@
                 this.showPage();
             }
 
+            handleCreateAccount() {
+                alert('Fonctionnalité "Créer un compte" : Cette fonctionnalité sera disponible dans une future version. Utilisez les comptes de démonstration pour tester l\'application :\n\n• erisaudrey@gmail.com / password123\n• admin@webtoontracer.com / admin123\n• user@test.com / user123');
+            }
+
+            handleForgotPassword() {
+                alert('Fonctionnalité "Mot de passe oublié" : Pour récupérer votre mot de passe, contactez l\'administrateur ou utilisez les comptes de démonstration :\n\n• erisaudrey@gmail.com / password123\n• admin@webtoontracer.com / admin123\n• user@test.com / user123');
+            }
+
             setupDashboard() {
                 const userInfo = document.getElementById('userInfo');
                 if (userInfo && this.currentUser) {
@@ -1666,8 +1933,8 @@
                     case 'favorites':
                         this.renderFavorites();
                         break;
-                    case 'reading':
-                        this.renderReadingList();
+                    case 'calendar':
+                        this.renderCalendar();
                         break;
                     case 'profile':
                         this.renderProfile();
@@ -1880,8 +2147,8 @@
             renderProfile() {
                 const profileEmail = document.getElementById('profileEmail');
                 const totalWebtoons = document.getElementById('totalWebtoons');
-                const totalFavorites = document.getElementById('totalFavorites');
-                const readingProgress = document.getElementById('readingProgress');
+                const chaptersRead = document.getElementById('chaptersRead');
+                const accountAge = document.getElementById('accountAge');
 
                 if (profileEmail && this.currentUser) {
                     if (this.currentUser.email === 'erisaudrey@gmail.com') {
@@ -1892,17 +2159,19 @@
                 }
 
                 if (totalWebtoons) totalWebtoons.textContent = this.webtoons.length;
-                if (totalFavorites) totalFavorites.textContent = this.favorites.size;
                 
-                if (readingProgress) {
-                    const totalChapters = this.webtoons.reduce((sum, w) => sum + w.chapters, 0);
-                    const readChapters = this.webtoons.reduce((sum, w) => {
+                if (chaptersRead) {
+                    const totalReadChapters = this.webtoons.reduce((sum, w) => {
                         const progress = this.getReadingProgress(w.id);
                         return sum + progress.chaptersRead;
                     }, 0);
-                    
-                    const percentage = totalChapters > 0 ? Math.round((readChapters / totalChapters) * 100) : 0;
-                    readingProgress.textContent = `${percentage}%`;
+                    chaptersRead.textContent = totalReadChapters;
+                }
+                
+                if (accountAge) {
+                    // Simule des jours d'activité basés sur la date de connexion
+                    const daysActive = Math.floor(Math.random() * 365) + 1;
+                    accountAge.textContent = daysActive;
                 }
             }
 
@@ -2439,6 +2708,157 @@
                 this.renderProfile();
             }
 
+            // Calendrier
+            navigateMonth(direction) {
+                this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + direction, 1);
+                this.renderCalendar();
+            }
+
+            renderCalendar() {
+                if (!this.currentDate) {
+                    this.currentDate = new Date();
+                }
+
+                const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 
+                    'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+                
+                const currentMonth = document.getElementById('currentMonth');
+                if (currentMonth) {
+                    currentMonth.textContent = `${monthNames[this.currentDate.getMonth()]} ${this.currentDate.getFullYear()}`;
+                }
+
+                const calendarDays = document.getElementById('calendarDays');
+                if (!calendarDays) return;
+
+                const year = this.currentDate.getFullYear();
+                const month = this.currentDate.getMonth();
+                const firstDay = new Date(year, month, 1);
+                const lastDay = new Date(year, month + 1, 0);
+                const today = new Date();
+
+                // Get first Monday
+                const startDate = new Date(firstDay);
+                startDate.setDate(startDate.getDate() - (startDate.getDay() === 0 ? 6 : startDate.getDay() - 1));
+
+                let daysHTML = '';
+                const currentDate = new Date(startDate);
+
+                for (let i = 0; i < 42; i++) { // 6 weeks max
+                    const dayNumber = currentDate.getDate();
+                    const isCurrentMonth = currentDate.getMonth() === month;
+                    const isToday = currentDate.toDateString() === today.toDateString();
+                    const hasRelease = this.checkReleaseDate(currentDate);
+
+                    let classes = 'calendar-day';
+                    if (isToday) classes += ' today';
+                    if (hasRelease) classes += ' has-release';
+                    if (!isCurrentMonth) classes += ' other-month';
+
+                    daysHTML += `
+                        <div class="${classes}" onclick="app.showDayDetails('${currentDate.toDateString()}')">
+                            ${dayNumber}
+                        </div>
+                    `;
+                    
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+
+                calendarDays.innerHTML = daysHTML;
+                this.renderUpcomingReleases();
+            }
+
+            checkReleaseDate(date) {
+                // Simule des sorties de chapitres (par exemple tous les mercredi et dimanche)
+                const dayOfWeek = date.getDay();
+                return dayOfWeek === 3 || dayOfWeek === 0; // Mercredi = 3, Dimanche = 0
+            }
+
+            renderUpcomingReleases() {
+                const upcomingList = document.getElementById('upcomingList');
+                if (!upcomingList) return;
+
+                const releases = this.getUpcomingReleases();
+                
+                if (releases.length === 0) {
+                    upcomingList.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Aucune sortie prévue cette semaine</p>';
+                    return;
+                }
+
+                upcomingList.innerHTML = releases.map(release => `
+                    <div class="release-item">
+                        <div class="release-info">
+                            <div class="release-title">${release.title}</div>
+                            <div class="release-date">${release.date}</div>
+                        </div>
+                        <div class="release-chapter">Ch. ${release.chapter}</div>
+                    </div>
+                `).join('');
+            }
+
+            getUpcomingReleases() {
+                const releases = [];
+                const today = new Date();
+                
+                // Simule des sorties prochaines basées sur les webtoons favoris
+                this.favorites.forEach(webtoonId => {
+                    const webtoon = this.webtoons.find(w => w.id === webtoonId);
+                    if (webtoon && webtoon.status === 'En cours') {
+                        const nextRelease = new Date(today);
+                        nextRelease.setDate(today.getDate() + Math.floor(Math.random() * 7) + 1);
+                        
+                        releases.push({
+                            title: webtoon.title,
+                            date: nextRelease.toLocaleDateString('fr-FR', { 
+                                weekday: 'long', 
+                                day: 'numeric', 
+                                month: 'long' 
+                            }),
+                            chapter: Math.floor(Math.random() * 50) + 1
+                        });
+                    }
+                });
+
+                // Ajoute quelques sorties par défaut si pas de favoris
+                if (releases.length === 0) {
+                    releases.push(
+                        {
+                            title: 'Tower of God',
+                            date: 'Mercredi 15 Janvier',
+                            chapter: 301
+                        },
+                        {
+                            title: 'Solo Leveling: Ragnarok',
+                            date: 'Dimanche 19 Janvier',
+                            chapter: 25
+                        },
+                        {
+                            title: 'UnOrdinary',
+                            date: 'Jeudi 23 Janvier',
+                            chapter: 251
+                        }
+                    );
+                }
+
+                return releases.slice(0, 5); // Limite à 5 sorties
+            }
+
+            showDayDetails(dateString) {
+                const date = new Date(dateString);
+                if (this.checkReleaseDate(date)) {
+                    alert(`Sorties prévues le ${date.toLocaleDateString('fr-FR', { 
+                        weekday: 'long', 
+                        day: 'numeric', 
+                        month: 'long' 
+                    })} :\n\n• Nouveaux chapitres disponibles\n• Consultez l'onglet favoris pour voir vos webtoons`);
+                } else {
+                    alert(`Aucune sortie prévue le ${date.toLocaleDateString('fr-FR', { 
+                        weekday: 'long', 
+                        day: 'numeric', 
+                        month: 'long' 
+                    })}`);
+                }
+            }
+
             saveToStorage() {
                 localStorage.setItem('webtoon_favorites', JSON.stringify([...this.favorites]));
                 localStorage.setItem('webtoon_data', JSON.stringify(this.webtoons));
@@ -2485,7 +2905,7 @@
             }
         }
 
-        // Initialiser l'application WEBTOON Tracer - Présentation 1
+        // Initialiser l'application WEBTOON Tracer - Présentation 2 (Version Améliorée)
         const app = new WebtoonTracer();
     </script>
 </body>
