@@ -1216,11 +1216,30 @@
                 this.currentYear = new Date().getFullYear();
                 
                 // Utilisateurs de démonstration
-                this.users = [
-                    { id: 1, email: 'erisaudrey@gmail.com', password: 'password123', isAdmin: true },
-                    { id: 2, email: 'admin@webtoontracer.com', password: 'admin123', isAdmin: true },
-                    { id: 3, email: 'user@test.com', password: 'user123', isAdmin: false }
-                ];
+              // --- Initialisation des utilisateurs ---
+this.users = [
+    { id: 1, email: 'erisaudrey@gmail.com', password: 'password123', isAdmin: true },
+    { id: 2, email: 'admin@webtoontracer.com', password: 'admin123', isAdmin: true },
+    { id: 3, email: 'user@test.com', password: 'user123', isAdmin: false }
+];
+
+// Charger les utilisateurs sauvegardés
+const savedUsers = localStorage.getItem('webtoon_users');
+if (savedUsers) {
+    try {
+        const parsedUsers = JSON.parse(savedUsers);
+        if (Array.isArray(parsedUsers)) {
+            parsedUsers.forEach(u => {
+                if (!this.users.some(user => user.email === u.email)) {
+                    this.users.push(u);
+                }
+            });
+        }
+    } catch(e) {
+        console.log('Erreur lors du chargement des utilisateurs sauvegardés');
+    }
+}
+
 
                 // Base de données des webtoons
                 this.webtoons = [
