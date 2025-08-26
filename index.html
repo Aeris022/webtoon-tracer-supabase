@@ -975,7 +975,6 @@
                     <nav class="nav-tabs">
                         <button class="nav-tab active" data-tab="home">🏠 Accueil</button>
                         <button class="nav-tab" data-tab="favorites">⭐ Mes favoris</button>
-                        <button class="nav-tab" data-tab="calendar">📅 Calendrier</button>
                         <button class="nav-tab" data-tab="profile">👤 Mon espace</button>
                         <button class="nav-tab admin-tab hidden" data-tab="admin">⚙️ Administration</button>
                     </nav>
@@ -1011,32 +1010,7 @@
                 
                 <div id="favoritesGrid" class="webtoons-grid"></div>
             </div>
-
-            <!-- Onglet Calendrier -->
-            <div id="calendarTab" class="tab-content hidden">
-                <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem; color: var(--primary);">📅 Calendrier de Sortie</h2>
-                
-                <div class="calendar-section">
-                    <div class="calendar-header">
-                        <button id="prevMonth" class="calendar-nav">‹</button>
-                        <h3 id="currentMonth" class="calendar-title">Janvier 2025</h3>
-                        <button id="nextMonth" class="calendar-nav">›</button>
-                    </div>
-                    
-                    <div class="calendar-grid">
-                        <div class="calendar-day-header">Lun</div>
-                        <div class="calendar-day-header">Mar</div>
-                        <div class="calendar-day-header">Mer</div>
-                        <div class="calendar-day-header">Jeu</div>
-                        <div class="calendar-day-header">Ven</div>
-                        <div class="calendar-day-header">Sam</div>
-                        <div class="calendar-day-header">Dim</div>
-                    </div>
-                    
-                    <div id="calendarDays" class="calendar-grid">
-                    </div>
-                    
-                    <div class="upcoming-releases">
+                     <div class="upcoming-releases">
                         <h3>📖 Sorties à venir</h3>
                         <div id="upcomingList" class="releases-list"></div>
                     </div>
