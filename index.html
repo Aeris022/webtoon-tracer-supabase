@@ -1515,10 +1515,10 @@
             handleLogout() {
                 this.currentUser = null;
                 this.isAuthenticated = false;
-                localStorage.removeItem('webtoon_user');
-                localStorage.removeItem('webtoon_remember_me');
-                localStorage.removeItem('webtoon_email');
-                localStorage.removeItem('webtoon_password');
+               localStorage.removeItem('webtoon_email');
+localStorageremoveItem('webtoon_password');
+localStorageremoveItem('webtoon_remember_me');
+localStorageremoveItem('webtoon_user');
                 this.showPage();
             }
 
