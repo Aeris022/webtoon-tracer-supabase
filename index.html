@@ -2424,45 +2424,65 @@ localStorageremoveItem('webtoon_user');
                 localStorage.setItem('webtoon_data', JSON.stringify(this.webtoons));
             }
 
-            loadFromStorage() {
-                const savedFavorites = localStorage.getItem('webtoon_favorites');
-                if (savedFavorites) {
-                    try {
-                        this.favorites = new Set(JSON.parse(savedFavorites));
-                    } catch (e) {
-                        this.favorites = new Set();
-                    }
-                }
+ loadFromStorage() {
+    // Charger les favoris
+    const savedFavorites = localStorage.getItem('webtoon_favorites');
+    if (savedFavorites) {
+        try {
+            this.favorites = new Set(JSON.parse(savedFavorites));
+        } catch (e) {
+            this.favorites = new Set();
+        }
+    }
 
-                const savedWebtoons = localStorage.getItem('webtoon_data');
-                if (savedWebtoons) {
-                    try {
-                        const parsed = JSON.parse(savedWebtoons);
-                        if (Array.isArray(parsed) && parsed.length > this.webtoons.length) {
-                            this.webtoons = parsed;
-                        }
-                    } catch (e) {
-                        console.log('Erreur lors du chargement des webtoons sauvegardés');
-                    }
-                }
-
-                // Fonction "Se souvenir de moi" améliorée
-                const rememberMe = localStorage.getItem('webtoon_remember_me') === 'true';
-                if (rememberMe) {
-                    const savedEmail = localStorage.getItem('webtoon_email');
-                    const savedPassword = localStorage.getItem('webtoon_password');
-                    
-                    setTimeout(() => {
-                        const emailInput = document.getElementById('email');
-                        const passwordInput = document.getElementById('password');
-                        const rememberCheckbox = document.getElementById('rememberMe');
-                        
-                        if (emailInput && savedEmail) emailInput.value = savedEmail;
-                        if (passwordInput && savedPassword) passwordInput.value = savedPassword;
-                        if (rememberCheckbox) rememberCheckbox.checked = true;
-                    }, 100);
-                }
+    // Charger les webtoons
+    const savedWebtoons = localStorage.getItem('webtoon_data');
+    if (savedWebtoons) {
+        try {
+            const parsed = JSON.parse(savedWebtoons);
+            if (Array.isArray(parsed)) {
+                this.webtoons = parsed;
             }
+        } catch (e) {
+            console.log('Erreur lors du chargement des webtoons sauvegardés');
+        }
+    }
+
+    // Ajouter les utilisateurs de démonstration si absents
+    const demoUsers = [
+        { id: 1, email: 'erisaudrey@gmail.com', password: 'password123', isAdmin: true },
+        { id: 2, email: 'admin@webtoontracer.com', password: 'admin123', isAdmin: true },
+        { id: 3, email: 'user@test.com', password: 'user123', isAdmin: false }
+    ];
+
+    if (!this.users || !Array.isArray(this.users)) {
+        this.users = [];
+    }
+
+    demoUsers.forEach(demo => {
+        if (!this.users.some(u => u.email === demo.email)) {
+            this.users.push(demo);
+        }
+    });
+
+    // Fonction "Se souvenir de moi"
+    const rememberMe = localStorage.getItem('webtoon_remember_me') === 'true';
+    if (rememberMe) {
+        const savedEmail = localStorage.getItem('webtoon_email');
+        const savedPassword = localStorage.getItem('webtoon_password');
+
+        setTimeout(() => {
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const rememberCheckbox = document.getElementById('rememberMe');
+
+            if (emailInput && savedEmail) emailInput.value = savedEmail;
+            if (passwordInput && savedPassword) passwordInput.value = savedPassword;
+            if (rememberCheckbox) rememberCheckbox.checked = true;
+        }, 100);
+    }
+}
+
 
             // Méthodes utilitaires
             toggleFavorite(webtoonId) {
