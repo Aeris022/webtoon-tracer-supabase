@@ -1199,7 +1199,7 @@
     </div>
 
     <!-- Input file caché pour Excel -->
-    <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display: none;">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <script>
         class WebtoonTracer {
@@ -2324,10 +2324,51 @@
             }
 
             handleExcelImport(e) {
-                const file = e.target.files[0];
-                if (!file) return;
+    const file = e.target.files[0];
+    if (!file) return;
 
-                alert('Importation Excel simulée ! Dans une vraie application, le fichier serait traité et les webtoons ajoutés automatiquement.');
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+
+        // On prend la première feuille
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+
+        // Convertit la feuille Excel en JSON
+        const webtoonsFromExcel = XLSX.utils.sheet_to_json(sheet);
+
+        // Chaque ligne doit correspondre à un webtoon
+        webtoonsFromExcel.forEach(row => {
+            const newWebtoon = {
+                id: this.webtoons.length + 1,
+                title: row["Titre"] || "Sans titre",
+                platform: row["Plateforme"] || "Webtoon",
+                status: row["Statut"] || "En cours",
+                chapters: parseInt(row["Chapitres"]) || 0,
+                description: row["Description"] || "",
+                author: "Inconnu",   // Comme tu n’as pas de colonne auteur
+                genre: "Non défini", // Comme tu n’as pas de colonne genre
+                rating: 0,           // On peut mettre 0 par défaut
+                image: "📖"
+            };
+            this.webtoons.push(newWebtoon);
+        });
+
+        this.saveToStorage();
+        this.renderAdminWebtoonslist();
+        this.renderWebtoons();
+
+        alert(`${webtoonsFromExcel.length} webtoon(s) importé(s) avec succès !`);
+    };
+
+    reader.readAsArrayBuffer(file);
+
+    // Réinitialiser l'input
+    e.target.value = '';
+}
+
                 
                 // Réinitialiser l'input
                 e.target.value = '';
