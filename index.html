@@ -975,6 +975,7 @@
                     <nav class="nav-tabs">
                         <button class="nav-tab active" data-tab="home">🏠 Accueil</button>
                         <button class="nav-tab" data-tab="favorites">⭐ Mes favoris</button>
+                        <button class="nav-tab" data-tab="calendar">📅 Calendrier</button>
                         <button class="nav-tab" data-tab="profile">👤 Mon espace</button>
                         <button class="nav-tab admin-tab hidden" data-tab="admin">⚙️ Administration</button>
                     </nav>
@@ -1010,7 +1011,32 @@
                 
                 <div id="favoritesGrid" class="webtoons-grid"></div>
             </div>
-                     <div class="upcoming-releases">
+
+            <!-- Onglet Calendrier -->
+            <div id="calendarTab" class="tab-content hidden">
+                <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem; color: var(--primary);">📅 Calendrier de Sortie</h2>
+                
+                <div class="calendar-section">
+                    <div class="calendar-header">
+                        <button id="prevMonth" class="calendar-nav">‹</button>
+                        <h3 id="currentMonth" class="calendar-title">Janvier 2025</h3>
+                        <button id="nextMonth" class="calendar-nav">›</button>
+                    </div>
+                    
+                    <div class="calendar-grid">
+                        <div class="calendar-day-header">Lun</div>
+                        <div class="calendar-day-header">Mar</div>
+                        <div class="calendar-day-header">Mer</div>
+                        <div class="calendar-day-header">Jeu</div>
+                        <div class="calendar-day-header">Ven</div>
+                        <div class="calendar-day-header">Sam</div>
+                        <div class="calendar-day-header">Dim</div>
+                    </div>
+                    
+                    <div id="calendarDays" class="calendar-grid">
+                    </div>
+                    
+                    <div class="upcoming-releases">
                         <h3>📖 Sorties à venir</h3>
                         <div id="upcomingList" class="releases-list"></div>
                     </div>
@@ -1199,7 +1225,7 @@
     </div>
 
     <!-- Input file caché pour Excel -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display: none;">
 
     <script>
         class WebtoonTracer {
@@ -1216,30 +1242,11 @@
                 this.currentYear = new Date().getFullYear();
                 
                 // Utilisateurs de démonstration
-              // --- Initialisation des utilisateurs ---
-this.users = [
-    { id: 1, email: 'erisaudrey@gmail.com', password: 'password123', isAdmin: true },
-    { id: 2, email: 'admin@webtoontracer.com', password: 'admin123', isAdmin: true },
-    { id: 3, email: 'user@test.com', password: 'user123', isAdmin: false }
-];
-
-// Charger les utilisateurs sauvegardés
-const savedUsers = localStorage.getItem('webtoon_users');
-if (savedUsers) {
-    try {
-        const parsedUsers = JSON.parse(savedUsers);
-        if (Array.isArray(parsedUsers)) {
-            parsedUsers.forEach(u => {
-                if (!this.users.some(user => user.email === u.email)) {
-                    this.users.push(u);
-                }
-            });
-        }
-    } catch(e) {
-        console.log('Erreur lors du chargement des utilisateurs sauvegardés');
-    }
-}
-
+                this.users = [
+                    { id: 1, email: 'erisaudrey@gmail.com', password: 'password123', isAdmin: true },
+                    { id: 2, email: 'admin@webtoontracer.com', password: 'admin123', isAdmin: true },
+                    { id: 3, email: 'user@test.com', password: 'user123', isAdmin: false }
+                ];
 
                 // Base de données des webtoons
                 this.webtoons = [
@@ -1534,10 +1541,10 @@ if (savedUsers) {
             handleLogout() {
                 this.currentUser = null;
                 this.isAuthenticated = false;
-               localStorage.removeItem('webtoon_email');
-localStorageremoveItem('webtoon_password');
-localStorageremoveItem('webtoon_remember_me');
-localStorageremoveItem('webtoon_user');
+                localStorage.removeItem('webtoon_user');
+                localStorage.removeItem('webtoon_remember_me');
+                localStorage.removeItem('webtoon_email');
+                localStorage.removeItem('webtoon_password');
                 this.showPage();
             }
 
@@ -2343,51 +2350,10 @@ localStorageremoveItem('webtoon_user');
             }
 
             handleExcelImport(e) {
-    const file = e.target.files[0];
-    if (!file) return;
+                const file = e.target.files[0];
+                if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-        const data = new Uint8Array(event.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-
-        // On prend la première feuille
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-
-        // Convertit la feuille Excel en JSON
-        const webtoonsFromExcel = XLSX.utils.sheet_to_json(sheet);
-
-        // Chaque ligne doit correspondre à un webtoon
-        webtoonsFromExcel.forEach(row => {
-            const newWebtoon = {
-                id: this.webtoons.length + 1,
-                title: row["Titre"] || "Sans titre",
-                platform: row["Plateforme"] || "Webtoon",
-                status: row["Statut"] || "En cours",
-                chapters: parseInt(row["Chapitres"]) || 0,
-                description: row["Description"] || "",
-                author: "Inconnu",   // Comme tu n’as pas de colonne auteur
-                genre: "Non défini", // Comme tu n’as pas de colonne genre
-                rating: 0,           // On peut mettre 0 par défaut
-                image: "📖"
-            };
-            this.webtoons.push(newWebtoon);
-        });
-
-        this.saveToStorage();
-        this.renderAdminWebtoonslist();
-        this.renderWebtoons();
-
-        alert(`${webtoonsFromExcel.length} webtoon(s) importé(s) avec succès !`);
-    };
-
-    reader.readAsArrayBuffer(file);
-
-    // Réinitialiser l'input
-    e.target.value = '';
-}
-
+                alert('Importation Excel simulée ! Dans une vraie application, le fichier serait traité et les webtoons ajoutés automatiquement.');
                 
                 // Réinitialiser l'input
                 e.target.value = '';
@@ -2443,65 +2409,45 @@ localStorageremoveItem('webtoon_user');
                 localStorage.setItem('webtoon_data', JSON.stringify(this.webtoons));
             }
 
- loadFromStorage() {
-    // Charger les favoris
-    const savedFavorites = localStorage.getItem('webtoon_favorites');
-    if (savedFavorites) {
-        try {
-            this.favorites = new Set(JSON.parse(savedFavorites));
-        } catch (e) {
-            this.favorites = new Set();
-        }
-    }
+            loadFromStorage() {
+                const savedFavorites = localStorage.getItem('webtoon_favorites');
+                if (savedFavorites) {
+                    try {
+                        this.favorites = new Set(JSON.parse(savedFavorites));
+                    } catch (e) {
+                        this.favorites = new Set();
+                    }
+                }
 
-    // Charger les webtoons
-    const savedWebtoons = localStorage.getItem('webtoon_data');
-    if (savedWebtoons) {
-        try {
-            const parsed = JSON.parse(savedWebtoons);
-            if (Array.isArray(parsed)) {
-                this.webtoons = parsed;
+                const savedWebtoons = localStorage.getItem('webtoon_data');
+                if (savedWebtoons) {
+                    try {
+                        const parsed = JSON.parse(savedWebtoons);
+                        if (Array.isArray(parsed) && parsed.length > this.webtoons.length) {
+                            this.webtoons = parsed;
+                        }
+                    } catch (e) {
+                        console.log('Erreur lors du chargement des webtoons sauvegardés');
+                    }
+                }
+
+                // Fonction "Se souvenir de moi" améliorée
+                const rememberMe = localStorage.getItem('webtoon_remember_me') === 'true';
+                if (rememberMe) {
+                    const savedEmail = localStorage.getItem('webtoon_email');
+                    const savedPassword = localStorage.getItem('webtoon_password');
+                    
+                    setTimeout(() => {
+                        const emailInput = document.getElementById('email');
+                        const passwordInput = document.getElementById('password');
+                        const rememberCheckbox = document.getElementById('rememberMe');
+                        
+                        if (emailInput && savedEmail) emailInput.value = savedEmail;
+                        if (passwordInput && savedPassword) passwordInput.value = savedPassword;
+                        if (rememberCheckbox) rememberCheckbox.checked = true;
+                    }, 100);
+                }
             }
-        } catch (e) {
-            console.log('Erreur lors du chargement des webtoons sauvegardés');
-        }
-    }
-
-    // Ajouter les utilisateurs de démonstration si absents
-    const demoUsers = [
-        { id: 1, email: 'erisaudrey@gmail.com', password: 'password123', isAdmin: true },
-        { id: 2, email: 'admin@webtoontracer.com', password: 'admin123', isAdmin: true },
-        { id: 3, email: 'user@test.com', password: 'user123', isAdmin: false }
-    ];
-
-    if (!this.users || !Array.isArray(this.users)) {
-        this.users = [];
-    }
-
-    demoUsers.forEach(demo => {
-        if (!this.users.some(u => u.email === demo.email)) {
-            this.users.push(demo);
-        }
-    });
-
-    // Fonction "Se souvenir de moi"
-    const rememberMe = localStorage.getItem('webtoon_remember_me') === 'true';
-    if (rememberMe) {
-        const savedEmail = localStorage.getItem('webtoon_email');
-        const savedPassword = localStorage.getItem('webtoon_password');
-
-        setTimeout(() => {
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
-            const rememberCheckbox = document.getElementById('rememberMe');
-
-            if (emailInput && savedEmail) emailInput.value = savedEmail;
-            if (passwordInput && savedPassword) passwordInput.value = savedPassword;
-            if (rememberCheckbox) rememberCheckbox.checked = true;
-        }, 100);
-    }
-}
-
 
             // Méthodes utilitaires
             toggleFavorite(webtoonId) {
