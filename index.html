@@ -3,150 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <title>Webtoon Tracer</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
-        #loginPage { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-        #dashboard { display: none; padding: 20px; }
-        #dashboard.active { display: block; }
-        .nav-tab { display: inline-block; margin-right: 10px; cursor: pointer; padding: 5px 10px; background: #ddd; border-radius: 5px; }
-        .nav-tab.active { background: #0369a1; color: #fff; }
-        .tab-content { display: none; margin-top: 20px; }
-        .tab-content.hidden { display: none; }
-        #webtoonsGrid, #favoritesGrid { display: grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap: 10px; }
-        .webtoon-card { background: #fff; padding: 10px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .card-header { display: flex; justify-content: space-between; align-items: center; }
-        .favorite-btn.active { color: gold; }
-        .btn-notes { margin-top: 5px; width: 100%; }
-        #searchContainer { margin-bottom: 15px; }
-        #searchInput { padding: 5px; width: 200px; }
-        #clearSearch { padding: 5px; margin-left: 5px; cursor: pointer; }
-        .admin-tab { display: inline-block; margin-right: 5px; cursor: pointer; padding: 3px 7px; background: #eee; border-radius: 3px; }
-        .admin-tab.active { background: #0369a1; color: #fff; }
-        .hidden { display: none; }
-        input[type="checkbox"] { margin-right: 5px; }
-        /* Modal basique */
-        .modal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; }
-        .modal-content { background:#fff; padding:20px; border-radius:10px; width:300px; max-height:80%; overflow-y:auto; }
-        .modal .hidden { display:none; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        #loginPage, #dashboard {
+            display: none;
+            padding: 20px;
+        }
+        #loginPage {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .tab-content, .admin-tab-content {
+            display: none;
+        }
+        .active {
+            display: block !important;
+        }
+        .webtoon-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px;
+            background: #fff;
+        }
+        .webtoon-card h3 {
+            cursor: pointer;
+        }
+        .favorite-btn.active {
+            color: gold;
+        }
+        #searchInput {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 300px;
+        }
+        .btn-notes {
+            margin-top: 5px;
+            padding: 5px 10px;
+        }
     </style>
 </head>
 <body>
 
-<!-- Login -->
 <div id="loginPage">
-    <h2>Connexion</h2>
     <form id="loginForm">
-        <input type="email" id="email" placeholder="Email"><br><br>
-        <input type="password" id="password" placeholder="Mot de passe"><br><br>
-        <label><input type="checkbox" id="rememberMe"> Se souvenir de moi</label><br><br>
-        <button type="submit">Se connecter</button>
+        <input type="email" id="email" placeholder="Email" required><br>
+        <input type="password" id="password" placeholder="Mot de passe" required><br>
+        <label><input type="checkbox" id="rememberMe"> Se souvenir de moi</label><br>
+        <button type="submit">Connexion</button>
+        <button type="button" id="createAccountBtn">Créer un compte</button>
+        <button type="button" id="forgotPasswordBtn">Mot de passe oublié</button>
     </form>
-    <button id="createAccountBtn">Créer un compte</button>
-    <button id="forgotPasswordBtn">Mot de passe oublié</button>
 </div>
 
-<!-- Dashboard -->
 <div id="dashboard">
     <div>
-        <span class="nav-tab active" data-tab="home">Accueil</span>
-        <span class="nav-tab" data-tab="favorites">Favoris</span>
-        <span class="nav-tab" data-tab="profile">Profil</span>
-        <span class="nav-tab" data-tab="admin">Admin</span>
-        <button id="logoutBtn">Déconnexion</button>
+        <input type="text" id="searchInput" placeholder="Rechercher un webtoon...">
+        <button id="clearSearch">Effacer</button>
     </div>
+    <div id="searchResults"></div>
+    <div id="webtoonsGrid" class="active tab-content"></div>
 
-    <div id="searchContainer">
-        <input type="text" id="searchInput" placeholder="Rechercher...">
-        <button id="clearSearch">X</button>
-        <div id="searchResults"></div>
-    </div>
-
-    <!-- Home Tab -->
-    <div id="homeTab" class="tab-content">
-        <div id="webtoonsGrid"></div>
-    </div>
-
-    <!-- Favorites Tab -->
-    <div id="favoritesTab" class="tab-content hidden">
-        <div id="noFavorites">Aucun favori</div>
-        <div id="favoritesGrid"></div>
-    </div>
-
-    <!-- Profile Tab -->
-    <div id="profileTab" class="tab-content hidden">
-        <p>Email: <span id="profileEmail"></span></p>
-        <p>Total Webtoons: <span id="totalWebtoons"></span></p>
-        <p>Favoris: <span id="favoriteCount"></span></p>
-        <p>Progression globale: <span id="totalProgress"></span></p>
-    </div>
-
-    <!-- Admin Tab -->
-    <div id="adminTab" class="tab-content hidden">
-        <button id="addWebtoonBtn">Ajouter Webtoon</button>
-        <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display:none;">
+    <div id="adminSection">
+        <button id="addWebtoonBtn">Ajouter un webtoon</button>
         <button id="importExcelBtn">Importer Excel</button>
-        <button id="deleteSelectedBtn">Supprimer sélection</button>
-        <button id="syncWebtoonsBtn">Synchroniser</button>
-        <input type="checkbox" id="selectAllCheckbox"> Tout sélectionner
-        <span id="selectionCounter">0 sélectionné(s)</span>
-
-        <div id="webtoonsAdminList"></div>
-        <div id="usersAdminList"></div>
+        <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display:none;">
+        <div id="webtoonsAdminList" class="admin-tab-content"></div>
     </div>
 </div>
 
-<!-- Modals -->
-<div id="notesModal" class="modal">
-    <div class="modal-content">
-        <h3>Mes Notes</h3>
-        <textarea id="notesText" rows="5" style="width:100%"></textarea><br><br>
-        <button id="saveNotes">Sauvegarder</button>
-        <button id="closeNotesModal">Fermer</button>
-    </div>
+<!-- Modal Ajouter Webtoon -->
+<div id="addWebtoonModal" class="hidden">
+    <form id="addWebtoonForm">
+        <input type="text" id="newTitle" placeholder="Titre" required><br>
+        <input type="text" id="newAuthor" placeholder="Auteur" required><br>
+        <input type="text" id="newGenre" placeholder="Genre" required><br>
+        <input type="text" id="newPlatform" placeholder="Plateforme" required><br>
+        <input type="text" id="newStatus" placeholder="Statut" required><br>
+        <input type="number" id="newChapters" placeholder="Chapitres" required><br>
+        <input type="number" id="newRating" placeholder="Note (0-100)" required><br>
+        <textarea id="newDescription" placeholder="Description"></textarea><br>
+        <button type="submit">Ajouter</button>
+        <button type="button" id="closeAddModal">Annuler</button>
+    </form>
 </div>
 
-<div id="chaptersModal" class="modal">
-    <div class="modal-content">
-        <h3 id="chaptersModalTitle"></h3>
-        <div id="progressText"></div>
-        <div id="chaptersGrid"></div>
-        <button id="closeChaptersModal">Fermer</button>
-    </div>
+<!-- Modal Notes -->
+<div id="notesModal" class="hidden">
+    <textarea id="notesText" placeholder="Vos notes..."></textarea><br>
+    <button id="saveNotes">Sauvegarder</button>
+    <button id="cancelNotes">Annuler</button>
 </div>
 
-<div id="addWebtoonModal" class="modal">
-    <div class="modal-content">
-        <h3>Ajouter Webtoon</h3>
-        <form id="addWebtoonForm">
-            <input type="text" id="newTitle" placeholder="Titre" required><br><br>
-            <input type="text" id="newAuthor" placeholder="Auteur"><br><br>
-            <input type="text" id="newGenre" placeholder="Genre"><br><br>
-            <input type="text" id="newPlatform" placeholder="Plateforme"><br><br>
-            <input type="text" id="newStatus" placeholder="Statut"><br><br>
-            <input type="number" id="newChapters" placeholder="Chapitres"><br><br>
-            <input type="number" id="newRating" placeholder="Note"><br><br>
-            <textarea id="newDescription" placeholder="Description"></textarea><br><br>
-            <button type="submit">Ajouter</button>
-            <button type="button" id="cancelAdd">Annuler</button>
-        </form>
-        <button id="closeAddModal">Fermer</button>
-    </div>
-</div>
-
-<!-- SheetJS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
 <script>
 class WebtoonTracer {
     constructor() {
+        this.users = [
+            { id: 1, email: "erisaudrey@gmail.com", password: "password123", isAdmin: true }
+        ];
         this.webtoons = [];
-        this.users = [];
         this.favorites = new Set();
-        this.currentUser = null;
-        this.isAuthenticated = false;
-        this.currentTab = 'home';
         this.searchTerm = '';
+        this.isAuthenticated = false;
+        this.currentUser = null;
 
         this.init();
     }
@@ -158,138 +126,158 @@ class WebtoonTracer {
         this.showPage();
     }
 
-    // Login, logout, create account, forgot password (inchangé)
+    checkAutoLogin() {
+        const savedUser = localStorage.getItem('webtoon_user');
+        const rememberMe = localStorage.getItem('webtoon_remember_me') === 'true';
+        if (savedUser && rememberMe) {
+            try { this.currentUser = JSON.parse(savedUser); this.isAuthenticated = true; } 
+            catch(e){ localStorage.removeItem('webtoon_user'); localStorage.removeItem('webtoon_remember_me'); }
+        }
+    }
+
+    showPage() {
+        const loginPage = document.getElementById('loginPage');
+        const dashboard = document.getElementById('dashboard');
+        if (this.isAuthenticated) {
+            loginPage.style.display = 'none';
+            dashboard.style.display = 'block';
+            this.renderWebtoons();
+        } else {
+            loginPage.style.display = 'flex';
+            dashboard.style.display = 'none';
+        }
+    }
 
     setupEventListeners() {
         const loginForm = document.getElementById('loginForm');
-        const logoutBtn = document.getElementById('logoutBtn');
         const createAccountBtn = document.getElementById('createAccountBtn');
         const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
-
-        if (loginForm) loginForm.addEventListener('submit', (e)=>this.handleLogin(e));
-        if (logoutBtn) logoutBtn.addEventListener('click', ()=>this.handleLogout());
-        if (createAccountBtn) createAccountBtn.addEventListener('click', ()=>this.handleCreateAccount());
-        if (forgotPasswordBtn) forgotPasswordBtn.addEventListener('click', ()=>this.handleForgotPassword());
-
-        document.querySelectorAll('.nav-tab').forEach(tab=>{
-            tab.addEventListener('click', e=>{
-                this.switchTab(e.currentTarget.dataset.tab);
-            });
-        });
-
         const searchInput = document.getElementById('searchInput');
         const clearSearch = document.getElementById('clearSearch');
-
-        if(searchInput){
-            searchInput.addEventListener('input', e=>{
-                this.searchTerm = e.target.value.toLowerCase();
-                this.updateSearchResults();
-                this.renderWebtoons();
-            });
-        }
-        if(clearSearch){
-            clearSearch.addEventListener('click', ()=>{
-                searchInput.value = '';
-                this.searchTerm = '';
-                this.updateSearchResults();
-                this.renderWebtoons();
-            });
-        }
-
-        // Modals & admin events
-        this.setupModalEvents();
-        this.setupAdminEvents();
-    }
-
-    // Admin methods (Excel import)
-    setupAdminEvents() {
         const addWebtoonBtn = document.getElementById('addWebtoonBtn');
         const importExcelBtn = document.getElementById('importExcelBtn');
-        const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
-        const syncWebtoonsBtn = document.getElementById('syncWebtoonsBtn');
-        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
         const excelFileInput = document.getElementById('excelFileInput');
 
-        if(addWebtoonBtn) addWebtoonBtn.addEventListener('click', ()=>this.openAddModal());
-        if(importExcelBtn) importExcelBtn.addEventListener('click', ()=>{ if(excelFileInput) excelFileInput.click(); });
-        if(deleteSelectedBtn) deleteSelectedBtn.addEventListener('click', ()=>this.deleteSelectedWebtoons());
-        if(syncWebtoonsBtn) syncWebtoonsBtn.addEventListener('click', ()=>this.syncWebtoons());
-        if(selectAllCheckbox) selectAllCheckbox.addEventListener('change', e=>this.toggleSelectAll(e.target.checked));
-        if(excelFileInput) excelFileInput.addEventListener('change', e=>this.handleExcelImport(e));
+        loginForm.addEventListener('submit', e => this.handleLogin(e));
+        createAccountBtn.addEventListener('click', () => this.handleCreateAccount());
+        forgotPasswordBtn.addEventListener('click', () => this.handleForgotPassword());
+
+        searchInput.addEventListener('input', e => { this.searchTerm = e.target.value.toLowerCase(); this.renderWebtoons(); });
+        clearSearch.addEventListener('click', () => { searchInput.value=''; this.searchTerm=''; this.renderWebtoons(); });
+
+        addWebtoonBtn.addEventListener('click', () => this.openAddModal());
+        importExcelBtn.addEventListener('click', () => excelFileInput.click());
+        excelFileInput.addEventListener('change', e => this.handleExcelImport(e));
+
+        document.getElementById('closeAddModal').addEventListener('click', () => this.closeAddModal());
+        document.getElementById('addWebtoonForm').addEventListener('submit', e => this.handleAddWebtoon(e));
+        document.getElementById('saveNotes').addEventListener('click', () => this.saveNotes());
+        document.getElementById('cancelNotes').addEventListener('click', () => this.closeNotesModal());
     }
 
-    handleExcelImport(e){
+    handleLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const rememberMe = document.getElementById('rememberMe').checked;
+        const user = this.users.find(u => u.email===email && u.password===password);
+        if(user) {
+            this.currentUser=user; this.isAuthenticated=true;
+            if(rememberMe) { localStorage.setItem('webtoon_user', JSON.stringify(user)); localStorage.setItem('webtoon_remember_me','true'); }
+            this.showPage();
+        } else { alert('Email ou mot de passe incorrect'); }
+    }
+
+    handleCreateAccount() {
+        const email = prompt('Email:'); if(!email) return;
+        if(this.users.some(u=>u.email===email)) { alert('Compte déjà existant'); return; }
+        const password = prompt('Mot de passe:'); if(!password || password.length<6) return;
+        const confirm = prompt('Confirmer:'); if(confirm!==password) return;
+        this.users.push({ id:this.users.length+1,email,password,isAdmin:false });
+        alert('Compte créé avec succès');
+    }
+
+    handleForgotPassword() {
+        alert('Fonction mot de passe oublié non modifiée.');
+    }
+
+    openAddModal() { document.getElementById('addWebtoonModal').classList.remove('hidden'); }
+    closeAddModal() { document.getElementById('addWebtoonModal').classList.add('hidden'); document.getElementById('addWebtoonForm').reset(); }
+
+    handleAddWebtoon(e) {
+        e.preventDefault();
+        const newWebtoon = {
+            id: this.webtoons.length + 1,
+            title: document.getElementById('newTitle').value,
+            author: document.getElementById('newAuthor').value,
+            genre: document.getElementById('newGenre').value,
+            platform: document.getElementById('newPlatform').value,
+            status: document.getElementById('newStatus').value,
+            chapters: parseInt(document.getElementById('newChapters').value),
+            rating: parseInt(document.getElementById('newRating').value),
+            description: document.getElementById('newDescription').value,
+            image: "📖"
+        };
+        this.webtoons.push(newWebtoon);
+        this.saveToStorage();
+        this.renderWebtoons();
+        this.closeAddModal();
+    }
+
+    handleExcelImport(e) {
         const file = e.target.files[0];
         if(!file) return;
         const reader = new FileReader();
-        reader.onload=(evt)=>{
+        reader.onload = (evt) => {
             const data = new Uint8Array(evt.target.result);
             const workbook = XLSX.read(data,{type:'array'});
-            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-            const rows = XLSX.utils.sheet_to_json(firstSheet);
-            rows.forEach(row=>{
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const json = XLSX.utils.sheet_to_json(sheet);
+            json.forEach((row,i)=>{
                 const newWebtoon = {
                     id:this.webtoons.length+1,
-                    title: row.title||'Sans titre',
-                    author: row.author||'Inconnu',
-                    genre: row.genre||'Inconnu',
-                    platform: row.platform||'Webtoon',
-                    status: row.status||'En cours',
-                    chapters: parseInt(row.chapters)||0,
-                    rating: parseInt(row.rating)||0,
-                    description: row.description||'',
-                    image: row.image||'📖'
+                    title:row.Titre||`Webtoon ${i+1}`,
+                    author:row.Auteur||'Inconnu',
+                    genre:row.Genre||'Divers',
+                    platform:row.Plateforme||'Webtoon',
+                    status:row.Statut||'En cours',
+                    chapters:parseInt(row.Chapitres)||0,
+                    rating:parseInt(row.Note)||0,
+                    description:row.Description||'',
+                    image: "📖"
                 };
                 this.webtoons.push(newWebtoon);
             });
             this.saveToStorage();
             this.renderWebtoons();
-            this.renderAdminWebtoonslist();
-            alert(`${rows.length} webtoon(s) importé(s) avec succès !`);
         };
         reader.readAsArrayBuffer(file);
         e.target.value='';
     }
 
-    // Render webtoons, favorites, profile, admin list (inchangé)
-    renderWebtoons(){
-        const grid=document.getElementById('webtoonsGrid');
-        if(!grid) return;
-        const filtered=this.webtoons.filter(w=>w.title.toLowerCase().includes(this.searchTerm)||w.author.toLowerCase().includes(this.searchTerm)||w.genre.toLowerCase().includes(this.searchTerm)||w.platform.toLowerCase().includes(this.searchTerm));
-        grid.innerHTML=filtered.map(w=>`
-        <div class="webtoon-card">
-            <div class="card-header">
-                <div class="webtoon-emoji">${w.image}</div>
-                <button class="favorite-btn ${this.favorites.has(w.id)?'active':''}" onclick="app.toggleFavorite(${w.id})">⭐</button>
-            </div>
-            <h3 class="webtoon-title" onclick="app.openChaptersModal(${w.id})">${w.title}</h3>
-            <p class="webtoon-description">${w.description}</p>
-            <div class="webtoon-details">
-                <div class="detail-item"><span>👤</span><span>Auteur: ${w.author}</span></div>
-                <div class="detail-item"><span>📖</span><span>Chapitres: ${w.chapters}</span></div>
-                <div class="detail-item"><span>🏷️</span><span>Genre: ${w.genre}</span></div>
-                <div class="detail-item"><span>📱</span><span>Plateforme: ${w.platform}</span></div>
-                <div class="detail-item"><span>📊</span><span>Statut: ${w.status}</span></div>
-                <div class="detail-item"><span>⭐</span><span>Note: ${w.rating}/100</span></div>
-            </div>
-            <button class="btn-notes" onclick="app.openNotes(${w.id})">📝 Mes Notes</button>
-        </div>`).join('');
+    saveToStorage() { localStorage.setItem('webtoon_data', JSON.stringify(this.webtoons)); }
+    loadFromStorage() {
+        const savedWebtoons = localStorage.getItem('webtoon_data');
+        if(savedWebtoons) { try { this.webtoons = JSON.parse(savedWebtoons); } catch(e){} }
     }
 
-    updateSearchResults(){
-        const searchResults=document.getElementById('searchResults');
-        if(!searchResults) return;
-        if(this.searchTerm){
-            const filtered=this.webtoons.filter(w=>w.title.toLowerCase().includes(this.searchTerm)||w.author.toLowerCase().includes(this.searchTerm)||w.genre.toLowerCase().includes(this.searchTerm)||w.platform.toLowerCase().includes(this.searchTerm));
-            searchResults.textContent=`${filtered.length} résultat(s) trouvé(s) pour "${this.searchTerm}"`;
-        }else searchResults.textContent='';
+    renderWebtoons() {
+        const grid = document.getElementById('webtoonsGrid');
+        const filtered = this.webtoons.filter(w=>w.title.toLowerCase().includes(this.searchTerm));
+        grid.innerHTML = filtered.map(w=>`
+            <div class="webtoon-card">
+                <div>${w.image}</div>
+                <h3>${w.title}</h3>
+                <p>${w.description}</p>
+                <div>Auteur: ${w.author} | Genre: ${w.genre} | Plateforme: ${w.platform}</div>
+                <div>Chapitres: ${w.chapters} | Statut: ${w.status} | Note: ${w.rating}/100</div>
+            </div>
+        `).join('');
     }
-
-    // Toutes les autres méthodes restent inchangées (favorites, notes, chapters, admin CRUD, storage)
 }
 
-// Initialisation
-const app=new WebtoonTracer();
+const app = new WebtoonTracer();
 </script>
 </body>
 </html>
