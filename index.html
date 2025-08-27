@@ -50,7 +50,6 @@
             padding: 20px;
         }
 
-        /* Page de connexion */
         .login-container {
             min-height: 100vh;
             display: flex;
@@ -157,7 +156,6 @@
             color: var(--primary-hover);
         }
 
-        /* Dashboard */
         .dashboard {
             display: none;
         }
@@ -236,7 +234,6 @@
             background: #dc2626;
         }
 
-        /* Contenu principal */
         .tab-content {
             display: none;
         }
@@ -399,7 +396,6 @@
             background: #059669;
         }
 
-        /* Profil */
         .profile-section {
             background: var(--card-bg);
             border-radius: 20px;
@@ -453,7 +449,6 @@
             font-size: 14px;
         }
 
-        /* Admin */
         .admin-section {
             background: var(--card-bg);
             border-radius: 20px;
@@ -543,7 +538,6 @@
             background: #d97706;
         }
 
-        /* Modales */
         .modal {
             position: fixed;
             top: 0;
@@ -615,7 +609,6 @@
             border-color: var(--primary);
         }
 
-        /* Chapitres */
         .chapters-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
@@ -658,7 +651,6 @@
             animation: spin 1s linear infinite;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -696,7 +688,6 @@
             }
         }
 
-        /* États vides */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -788,31 +779,26 @@
             background: #2563eb;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-    <!-- Page de connexion -->
     <div id="loginPage" class="login-container">
         <div class="login-card">
             <h1>🌟 WEBTOON Tracer</h1>
-            
             <form id="loginForm">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" class="form-input" required placeholder="votre@email.com">
                 </div>
-                
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
                     <input type="password" id="password" class="form-input" required placeholder="••••••••">
                 </div>
-                
                 <div class="checkbox-group">
                     <input type="checkbox" id="rememberMe">
                     <label for="rememberMe">Se souvenir de moi</label>
                 </div>
-                
                 <button type="submit" class="btn-primary">Se connecter</button>
-                
                 <div style="margin-top: 20px;">
                     <button type="button" id="createAccountBtn" class="btn-secondary" style="margin-bottom: 10px; width: 100%;">Créer un compte</button>
                     <button type="button" id="forgotPasswordBtn" class="btn-link">Mot de passe oublié ?</button>
@@ -821,20 +807,17 @@
         </div>
     </div>
 
-    <!-- Dashboard principal -->
     <div id="dashboard" class="dashboard">
         <div class="container">
             <header class="header">
                 <div class="header-content">
                     <div class="logo">🌟 WEBTOON Tracer</div>
-                    
                     <nav class="nav-tabs">
                         <button class="nav-tab active" data-tab="home">🏠 Accueil</button>
                         <button class="nav-tab" data-tab="favorites">⭐ Mes favoris</button>
                         <button class="nav-tab" data-tab="profile">👤 Mon espace</button>
                         <button class="nav-tab admin-tab hidden" data-tab="admin">⚙️ Administration</button>
                     </nav>
-                    
                     <div class="user-info">
                         <span id="userInfo">Utilisateur</span>
                         <button id="logoutBtn" class="btn-logout">Déconnexion</button>
@@ -842,7 +825,6 @@
                 </div>
             </header>
 
-            <!-- Onglet Accueil -->
             <div id="homeTab" class="tab-content">
                 <div class="search-section">
                     <div class="search-container">
@@ -851,23 +833,18 @@
                     </div>
                     <div id="searchResults" class="search-results"></div>
                 </div>
-                
                 <div id="webtoonsGrid" class="webtoons-grid"></div>
             </div>
 
-            <!-- Onglet Favoris -->
             <div id="favoritesTab" class="tab-content hidden">
                 <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem; color: var(--primary);">⭐ Mes Favoris</h2>
-                
                 <div id="noFavorites" class="empty-state" style="display: none;">
                     <div class="empty-icon">⭐</div>
                     <p>Aucun favori pour le moment. Ajoutez des webtoons à vos favoris depuis l'accueil !</p>
                 </div>
-                
                 <div id="favoritesGrid" class="webtoons-grid"></div>
             </div>
 
-            <!-- Onglet Mon Espace (Profil) -->
             <div id="profileTab" class="tab-content hidden">
                 <div class="profile-section">
                     <div class="profile-header">
@@ -878,18 +855,15 @@
                             <button onclick="app.switchTab('admin')" class="btn-add">⚙️ Administration</button>
                         </div>
                     </div>
-                    
                     <div class="stats-grid">
                         <div class="stat-card">
                             <div id="totalWebtoons" class="stat-number">0</div>
                             <div class="stat-label">Webtoons disponibles</div>
                         </div>
-                        
                         <div class="stat-card">
                             <div id="favoriteCount" class="stat-number">0</div>
                             <div class="stat-label">Favoris</div>
                         </div>
-                        
                         <div class="stat-card">
                             <div id="totalProgress" class="stat-number">0%</div>
                             <div class="stat-label">Progression totale</div>
@@ -898,19 +872,15 @@
                 </div>
             </div>
 
-            <!-- Onglet Administration -->
             <div id="adminTab" class="tab-content hidden">
                 <div class="admin-section">
                     <div style="text-align: center; margin-bottom: 30px;">
                         <h2 class="admin-title">⚙️ Administration</h2>
                     </div>
-                    
                     <div class="admin-tabs">
                         <button class="admin-tab active" data-admin-tab="webtoons">Gestion des Webtoons</button>
                         <button class="admin-tab" data-admin-tab="users">Gestion des Utilisateurs</button>
                     </div>
-                    
-                    <!-- Onglet Gestion Webtoons -->
                     <div id="adminWebtoonsTab" class="admin-tab-content">
                         <div style="text-align: center; margin-bottom: 30px;">
                             <button id="addWebtoonBtn" class="btn-add">+ Ajouter un Webtoon</button>
@@ -920,9 +890,7 @@
                                 <span class="sync-icon">🔄</span> Synchroniser
                             </button>
                         </div>
-                        
                         <div id="syncMessage" class="hidden" style="text-align: center; padding: 20px; background: #f0f9ff; border-radius: 12px; margin-bottom: 20px; color: var(--text-primary);"></div>
-                        
                         <div id="adminWebtoonsList" style="background: #f8fafc; padding: 20px; border-radius: 12px;">
                             <div class="select-all-container">
                                 <input type="checkbox" id="selectAllCheckbox" class="admin-checkbox">
@@ -932,14 +900,11 @@
                             <div id="webtoonsAdminList"></div>
                         </div>
                     </div>
-                    
-                    <!-- Onglet Gestion Utilisateurs -->
                     <div id="adminUsersTab" class="admin-tab-content hidden">
                         <div style="margin-bottom: 20px;">
                             <h3 style="color: var(--primary); margin-bottom: 15px;">👥 Gestion des Utilisateurs</h3>
                             <p style="color: var(--text-secondary);">Gérez les rôles et permissions des utilisateurs</p>
                         </div>
-                        
                         <div id="usersList" style="background: #f8fafc; padding: 20px; border-radius: 12px;">
                             <div id="usersAdminList"></div>
                         </div>
@@ -949,30 +914,25 @@
         </div>
     </div>
 
-    <!-- Modal Ajouter Webtoon -->
     <div id="addWebtoonModal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Ajouter un Webtoon</h3>
                 <button id="closeAddModal" class="btn-close">✕</button>
             </div>
-            
             <form id="addWebtoonForm">
                 <div class="form-group">
                     <label for="newTitle">Titre</label>
                     <input type="text" id="newTitle" class="form-input" required>
                 </div>
-                
                 <div class="form-group">
                     <label for="newGenre">Genre</label>
                     <input type="text" id="newGenre" class="form-input" required>
                 </div>
-                
                 <div class="form-group">
                     <label for="newPlatform">Plateforme</label>
                     <input type="text" id="newPlatform" class="form-input" required>
                 </div>
-                
                 <div class="form-group">
                     <label for="newStatus">Statut</label>
                     <select id="newStatus" class="form-input" required>
@@ -982,17 +942,14 @@
                         <option value="En pause">En pause</option>
                     </select>
                 </div>
-                
                 <div class="form-group">
                     <label for="newChapters">Nombre de chapitres</label>
                     <input type="number" id="newChapters" class="form-input" min="1" required>
                 </div>
-                
                 <div class="form-group">
                     <label for="newDescription">Description</label>
                     <textarea id="newDescription" class="textarea" placeholder="Description du webtoon..." required></textarea>
                 </div>
-                
                 <div class="modal-actions">
                     <button type="button" id="cancelAdd" class="btn-secondary">Annuler</button>
                     <button type="submit" class="btn-primary">Ajouter</button>
@@ -1001,16 +958,13 @@
         </div>
     </div>
 
-    <!-- Modal Chapitres -->
     <div id="chaptersModal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 id="chaptersModalTitle" class="modal-title">Chapitres</h3>
                 <button id="closeChaptersModal" class="btn-close">✕</button>
             </div>
-            
             <div id="chaptersGrid" class="chapters-grid"></div>
-            
             <div id="progressInfo" style="text-align: center; padding: 20px; background: #f8fafc; border-radius: 10px; margin-top: 20px;">
                 <div style="font-weight: bold; margin-bottom: 10px;">Progression</div>
                 <div id="progressText"></div>
@@ -1018,7 +972,6 @@
         </div>
     </div>
 
-    <!-- Input file caché pour Excel -->
     <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display: none;">
 
     <script>
@@ -1031,15 +984,13 @@
                 this.searchTerm = '';
                 this.favorites = new Set();
                 this.currentChaptersWebtoonId = null;
-                
-                // Utilisateurs de démonstration
+
                 this.users = [
                     { id: 1, email: 'erisaudrey@gmail.com', password: 'password123', isAdmin: true },
                     { id: 2, email: 'admin@webtoontracer.com', password: 'admin123', isAdmin: true },
                     { id: 3, email: 'user@test.com', password: 'user123', isAdmin: false }
                 ];
 
-                // Base de données des webtoons
                 this.webtoons = [
                     {
                         id: 1,
@@ -1097,6 +1048,7 @@
             }
 
             init() {
+                console.log('Initialisation de WebtoonTracer');
                 this.setupEventListeners();
                 this.loadFromStorage();
                 this.checkAutoLogin();
@@ -1106,12 +1058,13 @@
             checkAutoLogin() {
                 const savedUser = localStorage.getItem('webtoon_user');
                 const rememberMe = localStorage.getItem('webtoon_remember_me') === 'true';
-                
                 if (savedUser && rememberMe) {
                     try {
                         this.currentUser = JSON.parse(savedUser);
                         this.isAuthenticated = true;
+                        console.log('Connexion automatique réussie:', this.currentUser);
                     } catch (e) {
+                        console.error('Erreur lors de la connexion automatique:', e);
                         localStorage.removeItem('webtoon_user');
                         localStorage.removeItem('webtoon_remember_me');
                     }
@@ -1121,7 +1074,6 @@
             showPage() {
                 const loginPage = document.getElementById('loginPage');
                 const dashboard = document.getElementById('dashboard');
-                
                 if (this.isAuthenticated) {
                     loginPage.style.display = 'none';
                     dashboard.classList.add('active');
@@ -1134,29 +1086,33 @@
             }
 
             setupEventListeners() {
-                // Connexion
                 const loginForm = document.getElementById('loginForm');
                 const logoutBtn = document.getElementById('logoutBtn');
                 const createAccountBtn = document.getElementById('createAccountBtn');
                 const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
-                
+
                 if (loginForm) {
-                    loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+                    console.log('Formulaire loginForm trouvé, attachement de l\'événement...');
+                    loginForm.addEventListener('submit', (e) => {
+                        console.log('Formulaire soumis');
+                        this.handleLogin(e);
+                    });
+                } else {
+                    console.error('Formulaire loginForm non trouvé !');
                 }
-                
+
                 if (logoutBtn) {
                     logoutBtn.addEventListener('click', () => this.handleLogout());
                 }
-                
+
                 if (createAccountBtn) {
                     createAccountBtn.addEventListener('click', () => this.handleCreateAccount());
                 }
-                
+
                 if (forgotPasswordBtn) {
                     forgotPasswordBtn.addEventListener('click', () => this.handleForgotPassword());
                 }
 
-                // Navigation
                 document.querySelectorAll('.nav-tab').forEach(tab => {
                     tab.addEventListener('click', (e) => {
                         const tabName = e.currentTarget.dataset.tab;
@@ -1164,7 +1120,6 @@
                     });
                 });
 
-                // Onglets admin
                 document.querySelectorAll('.admin-tab').forEach(tab => {
                     tab.addEventListener('click', (e) => {
                         const tabName = e.currentTarget.dataset.adminTab;
@@ -1172,10 +1127,9 @@
                     });
                 });
 
-                // Recherche
                 const searchInput = document.getElementById('searchInput');
                 const clearSearch = document.getElementById('clearSearch');
-                
+
                 if (searchInput) {
                     searchInput.addEventListener('input', (e) => {
                         this.searchTerm = e.target.value.toLowerCase();
@@ -1183,7 +1137,7 @@
                         this.renderWebtoons();
                     });
                 }
-                
+
                 if (clearSearch) {
                     clearSearch.addEventListener('click', () => {
                         searchInput.value = '';
@@ -1193,33 +1147,28 @@
                     });
                 }
 
-                // Modales
                 this.setupModalEvents();
-                
-                // Admin
                 this.setupAdminEvents();
             }
 
             setupModalEvents() {
-                // Modal Chapitres
                 const closeChaptersModal = document.getElementById('closeChaptersModal');
                 if (closeChaptersModal) {
                     closeChaptersModal.addEventListener('click', () => this.closeChaptersModal());
                 }
 
-                // Modal Ajouter Webtoon
                 const closeAddModal = document.getElementById('closeAddModal');
                 const cancelAdd = document.getElementById('cancelAdd');
                 const addWebtoonForm = document.getElementById('addWebtoonForm');
-                
+
                 if (closeAddModal) {
                     closeAddModal.addEventListener('click', () => this.closeAddModal());
                 }
-                
+
                 if (cancelAdd) {
                     cancelAdd.addEventListener('click', () => this.closeAddModal());
                 }
-                
+
                 if (addWebtoonForm) {
                     addWebtoonForm.addEventListener('submit', (e) => this.handleAddWebtoon(e));
                 }
@@ -1232,29 +1181,29 @@
                 const syncWebtoonsBtn = document.getElementById('syncWebtoonsBtn');
                 const selectAllCheckbox = document.getElementById('selectAllCheckbox');
                 const excelFileInput = document.getElementById('excelFileInput');
-                
+
                 if (addWebtoonBtn) {
                     addWebtoonBtn.addEventListener('click', () => this.openAddModal());
                 }
-                
+
                 if (importExcelBtn) {
                     importExcelBtn.addEventListener('click', () => {
                         if (excelFileInput) excelFileInput.click();
                     });
                 }
-                
+
                 if (deleteSelectedBtn) {
                     deleteSelectedBtn.addEventListener('click', () => this.deleteSelectedWebtoons());
                 }
-                
+
                 if (syncWebtoonsBtn) {
                     syncWebtoonsBtn.addEventListener('click', () => this.syncWebtoons());
                 }
-                
+
                 if (selectAllCheckbox) {
                     selectAllCheckbox.addEventListener('change', (e) => this.toggleSelectAll(e));
                 }
-                
+
                 if (excelFileInput) {
                     excelFileInput.addEventListener('change', (e) => this.handleExcelImport(e));
                 }
@@ -1277,11 +1226,23 @@
 
             handleLogin(e) {
                 e.preventDefault();
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                const user = this.users.find(u => u.email === email && u.password === password);
+                console.log('handleLogin appelé');
+                const emailInput = document.getElementById('email');
+                const passwordInput = document.getElementById('password');
 
+                if (!emailInput || !passwordInput) {
+                    console.error('Inputs email ou password non trouvés');
+                    alert('Erreur : formulaire incomplet. Vérifiez la console.');
+                    return;
+                }
+
+                const email = emailInput.value;
+                const password = passwordInput.value;
+                console.log('Tentative de connexion avec:', { email, password });
+
+                const user = this.users.find(u => u.email === email && u.password === password);
                 if (user) {
+                    console.log('Utilisateur trouvé:', user);
                     this.currentUser = user;
                     this.isAuthenticated = true;
                     this.showPage();
@@ -1291,7 +1252,8 @@
                     });
                     this.saveToStorage();
                 } else {
-                    alert('Email ou mot de passe incorrect.');
+                    console.log('Utilisateur non trouvé pour:', { email, password });
+                    alert('Email ou mot de passe incorrect. Essayez erisaudrey@gmail.com/password123');
                 }
             }
 
@@ -1645,8 +1607,6 @@
                     syncMessage.textContent = 'Synchronisation en cours...';
                     syncMessage.classList.remove('hidden');
                     syncMessage.classList.add('spinning');
-
-                    // Simuler une synchronisation
                     setTimeout(() => {
                         syncMessage.classList.remove('spinning');
                         syncMessage.textContent = 'Synchronisation terminée avec succès !';
@@ -1656,19 +1616,62 @@
             }
 
             handleExcelImport(e) {
+                console.log('Importation Excel déclenchée');
                 const file = e.target.files[0];
-                if (file) {
-                    alert('Importation Excel non implémentée dans cette démo. Veuillez utiliser un fichier .xlsx valide.');
-                    e.target.value = '';
+                if (!file) {
+                    alert('Veuillez sélectionner un fichier Excel.');
+                    return;
                 }
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    console.log('Fichier Excel lu');
+                    const data = event.target.result;
+                    const workbook = XLSX.read(data, { type: 'binary' });
+                    const sheetName = workbook.SheetNames[0];
+                    const sheet = workbook.Sheets[sheetName];
+                    const webtoons = XLSX.utils.sheet_to_json(sheet);
+                    console.log('Webtoons extraits:', webtoons);
+
+                    webtoons.forEach((webtoon) => {
+                        if (webtoon.title && webtoon.chapters) {
+                            this.webtoons.push({
+                                id: Date.now() + Math.random(),
+                                title: webtoon.title,
+                                genre: webtoon.genre || '',
+                                platform: webtoon.platform || '',
+                                status: webtoon.status || '',
+                                chapters: parseInt(webtoon.chapters, 10),
+                                description: webtoon.description || '',
+                                image: webtoon.image || '📖'
+                            });
+                        }
+                    });
+
+                    e.target.value = '';
+                    this.renderWebtoons();
+                    this.updateProfileStats();
+                    alert('Webtoons importés avec succès !');
+                };
+                reader.onerror = () => {
+                    console.error('Erreur lors de la lecture du fichier Excel');
+                    alert('Erreur lors de la lecture du fichier.');
+                };
+                reader.readAsBinaryString(file);
             }
 
             openEditModal(id) {
-                alert(`Édition du webtoon avec ID ${id} non implémentée dans cette démo.`);
+                alert('Fonctionnalité de modification non implémentée dans cette démo.');
+            }
+
+            setupDashboard() {
+                document.getElementById('userInfo').textContent = this.currentUser ? this.currentUser.email : 'Utilisateur';
+                document.querySelectorAll('.admin-tab').forEach(tab => {
+                    tab.classList.toggle('hidden', !this.currentUser.isAdmin);
+                });
             }
         }
 
-        // Initialisation de l'application
         const app = new WebtoonTracer();
     </script>
 </body>
