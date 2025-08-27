@@ -649,73 +649,7 @@
             color: white;
         }
 
-       
-    
-        .upcoming-releases {
-            background: #f8fafc;
-            border-radius: 15px;
-            padding: 20px;
-        }
-
-        .upcoming-releases h3 {
-            margin-bottom: 15px;
-            color: var(--text-primary);
-        }
-
-        .releases-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .release-item {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 4px solid var(--primary);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .release-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .release-title {
-            font-weight: bold;
-            color: var(--text-primary);
-        }
-
-        .release-date {
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        .release-chapter {
-            background: var(--primary);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .other-month {
-            opacity: 0.3;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .spinning {
-            animation: spin 1s linear infinite;
-        }
-
-        /* Responsive */
+               /* Responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -924,7 +858,6 @@
                 <div id="favoritesGrid" class="webtoons-grid"></div>
             </div>
 
-            
             <!-- Onglet Mon Espace (Profil) -->
             <div id="profileTab" class="tab-content hidden">
                 <div class="profile-section">
@@ -1300,7 +1233,7 @@
                 // Admin
                 this.setupAdminEvents();
                 
-            }
+             
 
             setupModalEvents() {
                 // Modal Notes
@@ -1378,6 +1311,7 @@
                     excelFileInput.addEventListener('change', (e) => this.handleExcelImport(e));
                 }
             }
+
 
             handleLogin(e) {
                 e.preventDefault();
@@ -1931,21 +1865,6 @@
                     : username;
                     
                 return `${maskedUsername}@${domain}`;
-            }
-
-                upcomingList.innerHTML = releases.map(release => `
-                    <div class="release-item">
-                        <div class="release-info">
-                            <div class="release-title">${release.title}</div>
-                            <div class="release-date">${release.date}</div>
-                        </div>
-                        <div class="release-chapter">${release.chapter}</div>
-                    </div>
-                `).join('');
-            }
-
-            updateStats() {
-                this.renderProfile();
             }
 
             // Méthodes Admin
