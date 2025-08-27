@@ -383,10 +383,10 @@
             color: var(--text-secondary);
         }
 
-        .btn-notes {
+        .btn-chapters {
             width: 100%;
             padding: 10px;
-            background: var(--info);
+            background: var(--success);
             color: white;
             border: none;
             border-radius: 10px;
@@ -395,8 +395,8 @@
             transition: all 0.2s ease;
         }
 
-        .btn-notes:hover {
-            background: #2563eb;
+        .btn-chapters:hover {
+            background: #059669;
         }
 
         /* Profil */
@@ -949,26 +949,6 @@
         </div>
     </div>
 
-    <!-- Modal Notes -->
-    <div id="notesModal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">📝 Mes Notes</h3>
-                <button id="closeNotesModal" class="btn-close">✕</button>
-            </div>
-            
-            <div class="form-group">
-                <label for="notesText">Notes personnelles :</label>
-                <textarea id="notesText" class="textarea" placeholder="Ajoutez vos notes sur ce webtoon..."></textarea>
-            </div>
-            
-            <div class="modal-actions">
-                <button id="cancelNotes" class="btn-secondary">Annuler</button>
-                <button id="saveNotes" class="btn-primary">Sauvegarder</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal Ajouter Webtoon -->
     <div id="addWebtoonModal" class="modal hidden">
         <div class="modal-content">
@@ -981,11 +961,6 @@
                 <div class="form-group">
                     <label for="newTitle">Titre</label>
                     <input type="text" id="newTitle" class="form-input" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="newAuthor">Auteur</label>
-                    <input type="text" id="newAuthor" class="form-input" required>
                 </div>
                 
                 <div class="form-group">
@@ -1011,11 +986,6 @@
                 <div class="form-group">
                     <label for="newChapters">Nombre de chapitres</label>
                     <input type="number" id="newChapters" class="form-input" min="1" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="newRating">Note (0-100)</label>
-                    <input type="number" id="newRating" class="form-input" min="0" max="100" required>
                 </div>
                 
                 <div class="form-group">
@@ -1060,7 +1030,6 @@
                 this.currentAdminTab = 'webtoons';
                 this.searchTerm = '';
                 this.favorites = new Set();
-                this.currentNotesWebtoonId = null;
                 this.currentChaptersWebtoonId = null;
                 
                 // Utilisateurs de démonstration
@@ -1075,60 +1044,50 @@
                     {
                         id: 1,
                         title: "Solo Leveling",
-                        author: "Chugong",
                         genre: "Action, Fantasy",
                         platform: "Webtoon",
                         status: "Terminé",
                         chapters: 179,
-                        rating: 95,
                         description: "Un chasseur de rang E devient le plus puissant au monde.",
                         image: "⚔️"
                     },
                     {
                         id: 2,
                         title: "Tower of God",
-                        author: "SIU",
                         genre: "Adventure, Fantasy",
                         platform: "Webtoon",
                         status: "En cours",
                         chapters: 500,
-                        rating: 90,
                         description: "Bam escalade la mystérieuse Tour de Dieu pour retrouver Rachel.",
                         image: "🗼"
                     },
                     {
                         id: 3,
                         title: "The God of High School",
-                        author: "Yongje Park",
                         genre: "Action, Martial Arts",
                         platform: "Webtoon",
                         status: "Terminé",
                         chapters: 569,
-                        rating: 88,
                         description: "Un tournoi d'arts martiaux révèle des pouvoirs divins.",
                         image: "🥊"
                     },
                     {
                         id: 4,
                         title: "Noblesse",
-                        author: "Jeho Son",
                         genre: "Action, Supernatural",
                         platform: "Webtoon",
                         status: "Terminé",
                         chapters: 544,
-                        rating: 87,
                         description: "Un noble vampire se réveille dans le monde moderne.",
                         image: "🧛"
                     },
                     {
                         id: 5,
                         title: "Unordinary",
-                        author: "uru-chan",
                         genre: "Drama, Supernatural",
                         platform: "Webtoon",
                         status: "En cours",
                         chapters: 285,
-                        rating: 85,
                         description: "Dans un monde de super-pouvoirs, John cache sa véritable force.",
                         image: "⚡"
                     }
@@ -1242,24 +1201,6 @@
             }
 
             setupModalEvents() {
-                // Modal Notes
-                const closeNotesModal = document.getElementById('closeNotesModal');
-                const cancelNotes = document.getElementById('cancelNotes');
-                const saveNotes = document.getElementById('saveNotes');
-                
-                if (closeNotesModal) {
-                    closeNotesModal.addEventListener('click', () => this.closeNotesModal());
-                }
-                
-                if (cancelNotes) {
-                    cancelNotes.addEventListener('click', () => this.closeNotesModal());
-                }
-                
-                if (saveNotes) {
-
-                    saveNotes.addEventListener('click', () => this.saveNotes());
-                }
-
                 // Modal Chapitres
                 const closeChaptersModal = document.getElementById('closeChaptersModal');
                 if (closeChaptersModal) {
@@ -1324,19 +1265,10 @@
                 if (savedFavorites) {
                     this.favorites = new Set(JSON.parse(savedFavorites));
                 }
-                const savedNotes = localStorage.getItem('webtoon_notes');
-                if (savedNotes) {
-                    this.notes = JSON.parse(savedNotes);
-                } else {
-                    this.notes = {};
-                }
             }
 
             saveToStorage() {
                 localStorage.setItem('webtoon_favorites', JSON.stringify(Array.from(this.favorites)));
-                if (this.notes) {
-                    localStorage.setItem('webtoon_notes', JSON.stringify(this.notes));
-                }
                 if (this.currentUser && this.isAuthenticated) {
                     localStorage.setItem('webtoon_user', JSON.stringify(this.currentUser));
                     localStorage.setItem('webtoon_remember_me', document.getElementById('rememberMe').checked);
@@ -1367,8 +1299,9 @@
                 this.currentUser = null;
                 this.isAuthenticated = false;
                 this.favorites.clear();
-                this.notes = {};
-                this.saveToStorage();
+                localStorage.removeItem('webtoon_favorites');
+                localStorage.removeItem('webtoon_user');
+                localStorage.removeItem('webtoon_remember_me');
                 this.showPage();
             }
 
@@ -1407,8 +1340,8 @@
             updateSearchResults() {
                 const results = this.webtoons.filter(webtoon =>
                     webtoon.title.toLowerCase().includes(this.searchTerm) ||
-                    webtoon.author.toLowerCase().includes(this.searchTerm) ||
-                    webtoon.genre.toLowerCase().includes(this.searchTerm)
+                    webtoon.genre.toLowerCase().includes(this.searchTerm) ||
+                    webtoon.platform.toLowerCase().includes(this.searchTerm)
                 );
                 const searchResults = document.getElementById('searchResults');
                 if (searchResults) {
@@ -1423,8 +1356,8 @@
                 grid.innerHTML = '';
                 const filteredWebtoons = this.webtoons.filter(webtoon =>
                     webtoon.title.toLowerCase().includes(this.searchTerm) ||
-                    webtoon.author.toLowerCase().includes(this.searchTerm) ||
-                    webtoon.genre.toLowerCase().includes(this.searchTerm)
+                    webtoon.genre.toLowerCase().includes(this.searchTerm) ||
+                    webtoon.platform.toLowerCase().includes(this.searchTerm)
                 );
 
                 if (filteredWebtoons.length === 0) {
@@ -1444,12 +1377,10 @@
                         <p class="webtoon-description">${webtoon.description}</p>
                         <div class="webtoon-details">
                             <div class="detail-item">📅 ${webtoon.status}</div>
-                            <div class="detail-item">✍️ ${webtoon.author}</div>
+                            <div class="detail-item">🌐 ${webtoon.platform}</div>
                             <div class="detail-item">🎬 ${webtoon.chapters} chap.</div>
-                            <div class="detail-item">⭐ ${webtoon.rating}/100</div>
                         </div>
-                        <button class="btn-notes" data-id="${webtoon.id}">📝 Notes</button>
-                        <button class="btn-notes" data-id="${webtoon.id}" style="background: var(--success);">📖 Chapitres</button>
+                        <button class="btn-chapters" data-id="${webtoon.id}">📖 Chapitres</button>
                     `;
                     grid.appendChild(card);
 
@@ -1463,12 +1394,7 @@
                         title.addEventListener('click', () => this.openChaptersModal(webtoon.id, webtoon.title));
                     }
 
-                    const notesBtn = card.querySelectorAll('.btn-notes')[0];
-                    if (notesBtn) {
-                        notesBtn.addEventListener('click', () => this.openNotesModal(webtoon.id));
-                    }
-
-                    const chaptersBtn = card.querySelectorAll('.btn-notes')[1];
+                    const chaptersBtn = card.querySelector('.btn-chapters');
                     if (chaptersBtn) {
                         chaptersBtn.addEventListener('click', () => this.openChaptersModal(webtoon.id, webtoon.title));
                     }
@@ -1496,12 +1422,10 @@
                         <p class="webtoon-description">${webtoon.description}</p>
                         <div class="webtoon-details">
                             <div class="detail-item">📅 ${webtoon.status}</div>
-                            <div class="detail-item">✍️ ${webtoon.author}</div>
+                            <div class="detail-item">🌐 ${webtoon.platform}</div>
                             <div class="detail-item">🎬 ${webtoon.chapters} chap.</div>
-                            <div class="detail-item">⭐ ${webtoon.rating}/100</div>
                         </div>
-                        <button class="btn-notes" data-id="${webtoon.id}">📝 Notes</button>
-                        <button class="btn-notes" data-id="${webtoon.id}" style="background: var(--success);">📖 Chapitres</button>
+                        <button class="btn-chapters" data-id="${webtoon.id}">📖 Chapitres</button>
                     `;
                     grid.appendChild(card);
 
@@ -1515,12 +1439,7 @@
                         title.addEventListener('click', () => this.openChaptersModal(webtoon.id, webtoon.title));
                     }
 
-                    const notesBtn = card.querySelectorAll('.btn-notes')[0];
-                    if (notesBtn) {
-                        notesBtn.addEventListener('click', () => this.openNotesModal(webtoon.id));
-                    }
-
-                    const chaptersBtn = card.querySelectorAll('.btn-notes')[1];
+                    const chaptersBtn = card.querySelector('.btn-chapters');
                     if (chaptersBtn) {
                         chaptersBtn.addEventListener('click', () => this.openChaptersModal(webtoon.id, webtoon.title));
                     }
@@ -1555,30 +1474,6 @@
                 this.saveToStorage();
                 this.renderWebtoons();
                 this.renderFavorites();
-            }
-
-            openNotesModal(id) {
-                this.currentNotesWebtoonId = id;
-                const notesText = document.getElementById('notesText');
-                const modal = document.getElementById('notesModal');
-                if (notesText && modal) {
-                    notesText.value = this.notes[id] || '';
-                    modal.classList.remove('hidden');
-                }
-            }
-
-            closeNotesModal() {
-                const modal = document.getElementById('notesModal');
-                if (modal) modal.classList.add('hidden');
-            }
-
-            saveNotes() {
-                const notesText = document.getElementById('notesText');
-                if (notesText && this.currentNotesWebtoonId) {
-                    this.notes[this.currentNotesWebtoonId] = notesText.value;
-                    this.saveToStorage();
-                    this.closeNotesModal();
-                }
             }
 
             openChaptersModal(id, title) {
@@ -1643,16 +1538,14 @@
             handleAddWebtoon(e) {
                 e.preventDefault();
                 const newWebtoon = {
-                    id: Date.now(), // ID unique basé sur le timestamp
+                    id: Date.now(),
                     title: document.getElementById('newTitle').value,
-                    author: document.getElementById('newAuthor').value,
                     genre: document.getElementById('newGenre').value,
                     platform: document.getElementById('newPlatform').value,
                     status: document.getElementById('newStatus').value,
                     chapters: parseInt(document.getElementById('newChapters').value, 10),
-                    rating: parseInt(document.getElementById('newRating').value, 10),
                     description: document.getElementById('newDescription').value,
-                    image: "📖" // Icône par défaut
+                    image: "📖"
                 };
                 this.webtoons.push(newWebtoon);
                 this.closeAddModal();
@@ -1676,7 +1569,7 @@
                             <input type="checkbox" class="admin-webtoon-checkbox" data-id="${webtoon.id}">
                             <div class="admin-webtoon-info">
                                 <div class="admin-webtoon-title">${webtoon.title}</div>
-                                <div class="admin-webtoon-details">Auteur: ${webtoon.author} | Chapitres: ${webtoon.chapters}</div>
+                                <div class="admin-webtoon-details">Plateforme: ${webtoon.platform} | Chapitres: ${webtoon.chapters}</div>
                             </div>
                             <div class="admin-webtoon-actions">
                                 <button class="btn-edit" data-id="${webtoon.id}">Modifier</button>
@@ -1753,7 +1646,7 @@
                     syncMessage.classList.remove('hidden');
                     syncMessage.classList.add('spinning');
 
-                    // Simuler une synchronisation (remplace par une API réelle si nécessaire)
+                    // Simuler une synchronisation
                     setTimeout(() => {
                         syncMessage.classList.remove('spinning');
                         syncMessage.textContent = 'Synchronisation terminée avec succès !';
@@ -1766,7 +1659,7 @@
                 const file = e.target.files[0];
                 if (file) {
                     alert('Importation Excel non implémentée dans cette démo. Veuillez utiliser un fichier .xlsx valide.');
-                    e.target.value = ''; // Réinitialiser l'input
+                    e.target.value = '';
                 }
             }
 
@@ -1776,7 +1669,7 @@
         }
 
         // Initialisation de l'application
-        const app = new WebtoonTracer();t
+        const app = new WebtoonTracer();
     </script>
 </body>
 </html>
